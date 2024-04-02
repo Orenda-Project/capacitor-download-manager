@@ -5,7 +5,7 @@ Capacitor plugin for downloading files to native device
 ## Install
 
 ```bash
-npm install capactior-download-manager
+npm install git+https://github.com/Orenda-Project/capacitor-download-manager.git
 npx cap sync
 ```
 
