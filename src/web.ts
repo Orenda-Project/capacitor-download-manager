@@ -6,8 +6,13 @@ export class DownloadManagerWeb
   extends WebPlugin
   implements DownloadManagerPlugin
 {
-  async echo(options: { value: string }): Promise<{ value: string }> {
-    console.log('ECHO', options);
-    return options;
+  startDownload(options: { url: string[] }): Promise<{ value: string[] }> {
+    return Promise.resolve({ value: options.url });
+  }
+  startVideo(options: { url: string[] }): Promise<{ value: string[] }> {
+    return Promise.resolve({ value: options.url });
+  }
+  getDownloadList(options: string): Promise<{ value: string }> {
+    return Promise.resolve({ value: options });
   }
 }
