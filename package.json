@@ -1,5 +1,5 @@
 {
-  "name": "capactior-download-manager",
+  "name": "capacitor-download-manager",
   "version": "0.0.1",
   "description": "Capacitor plugin for downloading files to native device",
   "main": "dist/plugin.cjs.js",
@@ -11,7 +11,7 @@
     "android/build.gradle",
     "dist/",
     "ios/Plugin/",
-    "CapactiorDownloadManager.podspec"
+    "CapacitorDownloadManager.podspec"
   ],
   "author": "Nabi Ahmad",
   "license": "MIT",
