@@ -1,7 +1,7 @@
 var capacitorDownloadManager = (function (exports, core) {
     'use strict';
 
-    const Fetch2Plugin = core.registerPlugin('DownloadManager', {
+    const DownloadManager = core.registerPlugin('DownloadManager', {
         web: () => Promise.resolve().then(function () { return web; }).then(m => new m.DownloadManagerWeb()),
     });
 
@@ -22,7 +22,7 @@ var capacitorDownloadManager = (function (exports, core) {
         DownloadManagerWeb: DownloadManagerWeb
     });
 
-    exports.Fetch2Plugin = Fetch2Plugin;
+    exports.DownloadManager = DownloadManager;
 
     Object.defineProperty(exports, '__esModule', { value: true });
 

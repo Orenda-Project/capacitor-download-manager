@@ -1,4 +1,4 @@
 import type { DownloadManagerPlugin } from './definitions';
-declare const Fetch2Plugin: DownloadManagerPlugin;
+declare const DownloadManager: DownloadManagerPlugin;
 export * from './definitions';
-export { Fetch2Plugin };
+export { DownloadManager };

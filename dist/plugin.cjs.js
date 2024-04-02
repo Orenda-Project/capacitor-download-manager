@@ -4,7 +4,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
 
 var core = require('@capacitor/core');
 
-const Fetch2Plugin = core.registerPlugin('DownloadManager', {
+const DownloadManager = core.registerPlugin('DownloadManager', {
     web: () => Promise.resolve().then(function () { return web; }).then(m => new m.DownloadManagerWeb()),
 });
 
@@ -25,5 +25,5 @@ var web = /*#__PURE__*/Object.freeze({
     DownloadManagerWeb: DownloadManagerWeb
 });
 
-exports.Fetch2Plugin = Fetch2Plugin;
+exports.DownloadManager = DownloadManager;
 //# sourceMappingURL=plugin.cjs.js.map
