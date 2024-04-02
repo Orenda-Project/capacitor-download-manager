@@ -1,0 +1,103 @@
+{
+  "api": {
+    "name": "DownloadManagerPlugin",
+    "slug": "downloadmanagerplugin",
+    "docs": "",
+    "tags": [],
+    "methods": [
+      {
+        "name": "startDownload",
+        "signature": "(options: { url: string[]; }) => Promise<{ value: string[]; }>",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "",
+            "type": "{ url: string[]; }"
+          }
+        ],
+        "returns": "Promise<{ value: string[]; }>",
+        "tags": [],
+        "docs": "",
+        "complexTypes": [],
+        "slug": "startdownload"
+      },
+      {
+        "name": "startVideo",
+        "signature": "(options: { url: string[]; }) => Promise<{ value: string[]; }>",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "",
+            "type": "{ url: string[]; }"
+          }
+        ],
+        "returns": "Promise<{ value: string[]; }>",
+        "tags": [],
+        "docs": "",
+        "complexTypes": [],
+        "slug": "startvideo"
+      },
+      {
+        "name": "getDownloadList",
+        "signature": "(options: string) => Promise<{ value: string; }>",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "",
+            "type": "string"
+          }
+        ],
+        "returns": "Promise<{ value: string; }>",
+        "tags": [],
+        "docs": "",
+        "complexTypes": [],
+        "slug": "getdownloadlist"
+      },
+      {
+        "name": "addListener",
+        "signature": "(eventName: string, listenerFunc: (download: { result: string; }) => void) => PluginListenerHandle",
+        "parameters": [
+          {
+            "name": "eventName",
+            "docs": "",
+            "type": "string"
+          },
+          {
+            "name": "listenerFunc",
+            "docs": "",
+            "type": "(download: { result: string; }) => void"
+          }
+        ],
+        "returns": "PluginListenerHandle",
+        "tags": [],
+        "docs": "",
+        "complexTypes": [
+          "PluginListenerHandle"
+        ],
+        "slug": "addlistenerstring"
+      }
+    ],
+    "properties": []
+  },
+  "interfaces": [
+    {
+      "name": "PluginListenerHandle",
+      "slug": "pluginlistenerhandle",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "remove",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "() => Promise<void>"
+        }
+      ]
+    }
+  ],
+  "enums": [],
+  "typeAliases": [],
+  "pluginConfigs": []
+}
