@@ -47,7 +47,8 @@ public class DownloadManagerPlugin extends Plugin implements FetchListener {
         this.getActivity().getMainExecutor().execute(() -> {
             initDownloadManager();
             saveCall(call);
-            checkStoragePermissions();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) downloadManager.initDownloading(getSavedCall());
+            else checkStoragePermissions();
         });
     }
 
@@ -74,8 +75,8 @@ public class DownloadManagerPlugin extends Plugin implements FetchListener {
     private void checkStoragePermissions() {
         PermissionX
                 .init(this.getActivity())
-                .permissions(new String[] { Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE, })
+                .permissions(Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 .explainReasonBeforeRequest()
                 .onExplainRequestReason(
                         (scope, deniedList) -> scope.showRequestReasonDialog(deniedList,
