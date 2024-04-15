@@ -1,8 +1,5 @@
 package com.taleemabad.downloadmanager;
 
-import java.util.Arrays;
-import java.util.List;
-
 public class DownloadEvent {
 
     public static final String ON_ADDED = "onAdded";
@@ -18,5 +15,4 @@ public class DownloadEvent {
     public static final String ON_RESUMED = "onResumed";
     public static final String ON_STARTED = "onStarted";
     public static final String ON_WAITING_NETWORK = "onWaitingNetwork";
-
 }

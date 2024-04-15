@@ -8,13 +8,13 @@
 
 import Foundation
 
-protocol DownloadDelegate:AnyObject{
+protocol DownloadDelegate: AnyObject {
     func didFinish(_ donwloads: Download?)
     func didError(_ donwloads: Download?)
     func didProgress(_ donwloads: Download?)
 }
 
-public struct Download : Codable {
+public struct Download: Codable {
     var id: UUID = UUID()
     var file: String = ""
     var fileUri: String = ""
@@ -34,10 +34,9 @@ enum DownloadStatus: Codable {
     case failed
 }
 
-enum DownloadType: Codable{
+enum DownloadType: Codable {
     case file
     case image
     case audio
     case video
 }
-

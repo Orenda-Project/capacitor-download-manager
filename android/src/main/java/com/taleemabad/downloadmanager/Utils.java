@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Environment;
 
 public class Utils {
+
     public static String getFilePath(String url, Context context) {
         String fileName = getNameFromUrl(url);
         String dir = getSaveDir(context);
