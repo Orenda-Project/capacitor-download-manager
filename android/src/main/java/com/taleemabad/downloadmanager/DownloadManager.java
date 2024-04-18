@@ -61,13 +61,12 @@ public class DownloadManager {
     private Fetch init() {
         return Fetch.Impl.getInstance(
             new FetchConfiguration.Builder(mContext)
-                .setDownloadConcurrentLimit(1)
                 .setHttpDownloader(new OkHttpDownloader(Downloader.FileDownloaderType.SEQUENTIAL))
                 .setNamespace(namespace)
                 .setGlobalNetworkType(NetworkType.ALL)
                 .enableAutoStart(true)
                 .enableRetryOnNetworkGain(true)
-                .enableFileExistChecks(false)
+                .enableFileExistChecks(true)
                 .enableLogging(true)
                 .build()
         );
@@ -102,7 +101,6 @@ public class DownloadManager {
             Request request = new Request(url, fileName);
             request.setGroupId(groupId);
             request.setPriority(Priority.HIGH);
-            request.setTag(fileName);
             request.setNetworkType(NetworkType.ALL);
             requests.add(request);
         }
