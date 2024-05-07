@@ -3,11 +3,11 @@ export class DownloadManagerWeb extends WebPlugin {
     startDownload(options) {
         return Promise.resolve({ value: options.url });
     }
-    startVideo(options) {
-        return Promise.resolve({ value: options.url });
+    getDownloadList() {
+        return Promise.resolve({ value: '[]' });
     }
-    getDownloadList(options) {
-        return Promise.resolve({ value: options });
+    removeDownloads(options) {
+        return Promise.resolve({ value: options.value });
     }
 }
 //# sourceMappingURL=web.js.map

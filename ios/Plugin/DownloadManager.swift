@@ -39,6 +39,23 @@ import Capacitor
         }
     }
 
+    func deleteDownloads(by urlsToRemove: [String]) -> [Download]? {
+        guard var downloads = downloadList else { return nil }
+        var removedDownloads: [Download] = []
+        for i in downloads.indices {
+            if urlsToRemove.contains(downloads[i].url) {
+                removedDownloads.append(downloads[i])
+                downloads.remove(at: i)
+                break
+            }
+        }
+        downloadList = downloads
+        saveDownloads()
+        CAPLog.print("Downloads:: \(downloadList)")
+        CAPLog.print("RemovedDownloads:: \(removedDownloads)")
+        return removedDownloads.isEmpty ? nil : removedDownloads
+    }
+    
     public typealias ProgressEmitter = (_ bytes: Int64, _ contentLength: Int64) -> Void
 
     public func getDirectory(directory: String?) -> FileManager.SearchPathDirectory? {
@@ -59,7 +76,7 @@ import Capacitor
         loadDownloads()
         addDownload(download: Download(file: url.absoluteString, url: url.absoluteString))
 
-        let directory = "DOCUMENTS"
+        let directory = "LIBRARY"
         let path = url.lastPathComponent
         var urlString = url.absoluteString
 

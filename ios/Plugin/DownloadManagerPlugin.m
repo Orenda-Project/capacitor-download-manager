@@ -6,4 +6,5 @@
 CAP_PLUGIN(DownloadManagerPlugin, "DownloadManager",
            CAP_PLUGIN_METHOD(startDownload, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(getDownloadList, CAPPluginReturnPromise);
+           CAP_PLUGIN_METHOD(removeDownloads, CAPPluginReturnPromise);
 )

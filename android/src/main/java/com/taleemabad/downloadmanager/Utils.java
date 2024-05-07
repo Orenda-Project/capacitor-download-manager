@@ -2,7 +2,6 @@ package com.taleemabad.downloadmanager;
 
 import android.content.Context;
 import android.net.Uri;
-import android.os.Environment;
 
 public class Utils {
 
@@ -17,10 +16,6 @@ public class Utils {
     }
 
     public static String getSaveDir(Context context) {
-        try {
-            return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath();
-        } catch (Exception e) {
-            return String.valueOf(context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS));
-        }
+        return context.getFilesDir().getAbsolutePath();
     }
 }

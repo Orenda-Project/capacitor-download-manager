@@ -5,12 +5,12 @@ export interface DownloadManagerPlugin {
     }): Promise<{
         value: string[];
     }>;
-    startVideo(options: {
-        url: string[];
+    removeDownloads(options: {
+        value: string[];
     }): Promise<{
         value: string[];
     }>;
-    getDownloadList(options: string): Promise<{
+    getDownloadList(): Promise<{
         value: string;
     }>;
     addListener(eventName: string, listenerFunc: (download: {

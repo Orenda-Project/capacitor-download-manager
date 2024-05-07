@@ -7,9 +7,8 @@ import Capacitor
  */
 @objc(DownloadManagerPlugin)
 public class DownloadManagerPlugin: CAPPlugin {
-
     private let implementation = DownloadManager()
-
+    
     @objc func getDownloadList(_ call: CAPPluginCall) {
         guard let downloads = self.implementation.fetchDownloads() else {
             call.reject("No downloads found!")
@@ -29,6 +28,31 @@ public class DownloadManagerPlugin: CAPPlugin {
         }
 
     }
+    
+    @objc func removeDownloads(_ call: CAPPluginCall) {
+        guard let urls = call.getArray("value", String.self) else {
+            call.reject("No valid urls provided")
+            return
+        }
+        if !urls.isEmpty {
+            if let removedDownloads = self.implementation.deleteDownloads(by: urls){
+                removedDownloads.forEach { download in
+                    let encoder = JSONEncoder()
+                    encoder.outputFormatting = .prettyPrinted
+                    do {
+                        let jsonData = try encoder.encode(download)
+                        if let jsonString = String(data: jsonData, encoding: .utf8) {
+                            CAPLog.print(jsonString)
+                            self.notifyListeners("onRemoved", data: ["download": jsonString])
+                        }
+                    } catch {
+                        CAPLog.print("Error encoding Download: \(error)")
+                    }
+                }
+            }
+        }
+    }
+   
 
     @objc func startDownload(_ call: CAPPluginCall) {
         guard let urls = call.getArray("url", String.self) else {
@@ -36,20 +60,13 @@ public class DownloadManagerPlugin: CAPPlugin {
             return
         }
         guard let downloads = self.implementation.fetchDownloads() else { return }
-
         for url in urls {
             let contains = downloads.first { download in
                 download.url == url
             }
-
             if contains == nil {
-
                 let progressEmitter: DownloadManager.ProgressEmitter = { bytes, contentLength in
                     let progress = (Int(bytes) / Int(contentLength)) * 100
-
-                    CAPLog.print("Progress", String(describing: progress))
-                    CAPLog.print("URL", String(describing: url))
-
                     if (progress % 10) == 0 {
                         if let index = self.implementation.downloadList?.firstIndex(where: { $0.url == url }) {
                             if var newDownload = self.implementation.downloadList?[index] {
@@ -58,7 +75,6 @@ public class DownloadManagerPlugin: CAPPlugin {
                                 newDownload.status = progress == 100 ? "COMPLETED" : "DONWLOADING"
                                 self.implementation.downloadList?[index] = newDownload
                                 self.implementation.saveDownloads()
-
                                 let encoder = JSONEncoder()
                                 encoder.outputFormatting = .prettyPrinted
                                 do {
@@ -66,9 +82,10 @@ public class DownloadManagerPlugin: CAPPlugin {
                                     if let jsonString = String(data: jsonData, encoding: .utf8) {
                                         CAPLog.print(jsonString)
                                         if Int(bytes) == Int(contentLength) {
-
+                                            CAPLog.print("onCompleted","download \(jsonString)")
                                             self.notifyListeners("onCompleted", data: ["download": jsonString])
                                         } else {
+                                            CAPLog.print("onProgress","download \(jsonString)")
                                             self.notifyListeners("onProgress", data: ["download": jsonString])
                                         }
                                     }
@@ -93,7 +110,6 @@ public class DownloadManagerPlugin: CAPPlugin {
                 do {
                     let jsonData = try encoder.encode(contains)
                     if let jsonString = String(data: jsonData, encoding: .utf8) {
-                        CAPLog.print(jsonString)
                         self.notifyListeners("onCompleted", data: ["download": jsonString])
                     }
                 } catch {

@@ -6,12 +6,12 @@ export declare class DownloadManagerWeb extends WebPlugin implements DownloadMan
     }): Promise<{
         value: string[];
     }>;
-    startVideo(options: {
-        url: string[];
+    getDownloadList(): Promise<{
+        value: string;
+    }>;
+    removeDownloads(options: {
+        value: string[];
     }): Promise<{
         value: string[];
-    }>;
-    getDownloadList(options: string): Promise<{
-        value: string;
     }>;
 }

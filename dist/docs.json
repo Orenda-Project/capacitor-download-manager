@@ -22,31 +22,25 @@
         "slug": "startdownload"
       },
       {
-        "name": "startVideo",
-        "signature": "(options: { url: string[]; }) => Promise<{ value: string[]; }>",
+        "name": "removeDownloads",
+        "signature": "(options: { value: string[]; }) => Promise<{ value: string[]; }>",
         "parameters": [
           {
             "name": "options",
             "docs": "",
-            "type": "{ url: string[]; }"
+            "type": "{ value: string[]; }"
           }
         ],
         "returns": "Promise<{ value: string[]; }>",
         "tags": [],
         "docs": "",
         "complexTypes": [],
-        "slug": "startvideo"
+        "slug": "removedownloads"
       },
       {
         "name": "getDownloadList",
-        "signature": "(options: string) => Promise<{ value: string; }>",
-        "parameters": [
-          {
-            "name": "options",
-            "docs": "",
-            "type": "string"
-          }
-        ],
+        "signature": "() => Promise<{ value: string; }>",
+        "parameters": [],
         "returns": "Promise<{ value: string; }>",
         "tags": [],
         "docs": "",

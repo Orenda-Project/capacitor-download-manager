@@ -14,8 +14,8 @@ npx cap sync
 <docgen-index>
 
 * [`startDownload(...)`](#startdownload)
-* [`startVideo(...)`](#startvideo)
-* [`getDownloadList(...)`](#getdownloadlist)
+* [`removeDownloads(...)`](#removedownloads)
+* [`getDownloadList()`](#getdownloadlist)
 * [`addListener(string, ...)`](#addlistenerstring)
 * [Interfaces](#interfaces)
 

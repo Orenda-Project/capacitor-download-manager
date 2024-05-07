@@ -9,10 +9,10 @@ export class DownloadManagerWeb
   startDownload(options: { url: string[] }): Promise<{ value: string[] }> {
     return Promise.resolve({ value: options.url });
   }
-  startVideo(options: { url: string[] }): Promise<{ value: string[] }> {
-    return Promise.resolve({ value: options.url });
+  getDownloadList(): Promise<{ value: string }> {
+    return Promise.resolve({ value: '[]' });
   }
-  getDownloadList(options: string): Promise<{ value: string }> {
-    return Promise.resolve({ value: options });
+  removeDownloads(options: { value: string[] }): Promise<{ value: string[] }> {
+    return Promise.resolve({ value: options.value });
   }
 }
