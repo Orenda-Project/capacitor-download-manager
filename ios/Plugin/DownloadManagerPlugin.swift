@@ -30,23 +30,23 @@ public class DownloadManagerPlugin: CAPPlugin {
     }
     
     @objc func removeDownloads(_ call: CAPPluginCall) {
-        guard let urls = call.getArray("value", String.self) else {
-            call.reject("No valid urls provided")
+        guard let items = call.getArray("value", String.self) else {
+            call.reject("Not a valid data provided!")
             return
         }
-        if !urls.isEmpty {
-            if let removedDownloads = self.implementation.deleteDownloads(by: urls){
+        if !items.isEmpty {
+            if let removedDownloads = self.implementation.deleteDownloads(by: items){
                 removedDownloads.forEach { download in
                     let encoder = JSONEncoder()
                     encoder.outputFormatting = .prettyPrinted
                     do {
                         let jsonData = try encoder.encode(download)
                         if let jsonString = String(data: jsonData, encoding: .utf8) {
-                            CAPLog.print(jsonString)
                             self.notifyListeners("onRemoved", data: ["download": jsonString])
                         }
                     } catch {
                         CAPLog.print("Error encoding Download: \(error)")
+                        call.reject("Error encoding Download: \(error)")
                     }
                 }
             }
