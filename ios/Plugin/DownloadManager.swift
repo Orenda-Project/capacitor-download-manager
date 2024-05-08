@@ -39,11 +39,11 @@ import Capacitor
         }
     }
 
-    func deleteDownloads(by downloadToRemove: [String]) -> [Download]? {
+    func deleteDownloads(by downloadsToRemove: [String]) -> [Download]? {
         guard var downloads = downloadList else { return nil }
         var removedDownloads: [Download] = []
         for i in downloads.indices {
-            if urlsToRemove.contains(downloads[i].id) {
+            if downloadsToRemove.contains(downloads[i].id.uuidString) {
                 removedDownloads.append(downloads[i])
                 downloads.remove(at: i)
                 break
