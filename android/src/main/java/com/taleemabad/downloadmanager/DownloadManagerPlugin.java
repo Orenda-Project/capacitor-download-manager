@@ -1,10 +1,8 @@
 package com.taleemabad.downloadmanager;
 
-import android.Manifest;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,9 +14,7 @@ import com.getcapacitor.Plugin;
 import com.getcapacitor.PluginCall;
 import com.getcapacitor.PluginMethod;
 import com.getcapacitor.annotation.CapacitorPlugin;
-import com.getcapacitor.annotation.Permission;
 import com.google.gson.Gson;
-import com.permissionx.guolindev.PermissionX;
 import com.tonyodev.fetch2.Download;
 import com.tonyodev.fetch2.Error;
 import com.tonyodev.fetch2.FetchListener;
@@ -27,12 +23,7 @@ import com.tonyodev.fetch2core.DownloadBlock;
 import java.util.ArrayList;
 import java.util.List;
 
-@CapacitorPlugin(
-        name = "DownloadManager",
-        permissions = {
-                @Permission(strings = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, alias = "storage")
-        }
-)
+@CapacitorPlugin(name = "DownloadManager")
 public class DownloadManagerPlugin extends Plugin implements FetchListener {
 
     private DownloadManager downloadManager = null;
@@ -46,19 +37,16 @@ public class DownloadManagerPlugin extends Plugin implements FetchListener {
     @RequiresApi(api = Build.VERSION_CODES.R)
     @PluginMethod
     public void startDownload(PluginCall call) {
+        saveCall(call);
         this.getActivity()
                 .getMainExecutor()
                 .execute(
                         () -> {
                             initDownloadManager();
-                            this.bridge.saveCall(call);
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
-                                downloadManager.initDownloading(
-                                        call
-                                );
-                            else checkStoragePermissions();
-                        }
-                );
+                            PluginCall _call = getSavedCall();
+                            System.out.println(_call);
+                            downloadManager.initDownloading(_call);
+                        });
     }
 
     @RequiresApi(api = Build.VERSION_CODES.R)
@@ -72,8 +60,7 @@ public class DownloadManagerPlugin extends Plugin implements FetchListener {
                         JSObject ret = new JSObject();
                         ret.put("download", new Gson().toJson(downloadList));
                         call.resolve(ret);
-                    }
-            );
+                    });
         } catch (Exception e) {
             JSObject ret = new JSObject();
             ret.put("error", e.getMessage());
@@ -98,44 +85,13 @@ public class DownloadManagerPlugin extends Plugin implements FetchListener {
 
                         downloadManager.deleteDownloads(ids);
                         call.resolve();
-                    }
-            );
+                    });
         } catch (Exception e) {
             JSObject ret = new JSObject();
             ret.put("error", e.getMessage());
             notifyListeners("removeDownload", ret);
             call.reject(e.getMessage());
         }
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.R)
-    private void checkStoragePermissions() {
-        PermissionX
-                .init(this.getActivity())
-                .permissions(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                .explainReasonBeforeRequest()
-                .onExplainRequestReason(
-                        (scope, deniedList) ->
-                                scope.showRequestReasonDialog(deniedList, "Core fundamental are based on these permissions", "OK", "Cancel")
-                )
-                .onForwardToSettings(
-                        (scope, deniedList) ->
-                                scope.showForwardToSettingsDialog(
-                                        deniedList,
-                                        "You need to allow necessary permissions in Settings manually",
-                                        "OK",
-                                        "Cancel"
-                                )
-                )
-                .request(
-                        (allGranted, grantList, deniedList) -> {
-                            if (allGranted) {
-                                downloadManager.initDownloading(getSavedCall());
-                            } else {
-                                Toast.makeText(this.getActivity(), "These permissions are denied: " + deniedList, Toast.LENGTH_LONG).show();
-                            }
-                        }
-                );
     }
 
     @Override
@@ -165,7 +121,8 @@ public class DownloadManagerPlugin extends Plugin implements FetchListener {
     @Override
     public void onDownloadBlockUpdated(@NonNull Download download, @NonNull DownloadBlock downloadBlock, int i) {
         Log.i(TAG, DownloadEvent.ON_DOWNLOAD_BLOCK_UPDATED + " : " + download);
-        notifyListeners(DownloadEvent.ON_DOWNLOAD_BLOCK_UPDATED, new JSObject().put("download", new Gson().toJson(download)));
+        notifyListeners(DownloadEvent.ON_DOWNLOAD_BLOCK_UPDATED,
+                new JSObject().put("download", new Gson().toJson(download)));
     }
 
     @Override

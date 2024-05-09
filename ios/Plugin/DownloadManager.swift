@@ -45,12 +45,15 @@ import Capacitor
         for i in downloads.indices {
             if downloadsToRemove.contains(downloads[i].id.uuidString) {
                 removedDownloads.append(downloads[i])
+                deleteFile(path: downloads[i].file)
                 downloads.remove(at: i)
+                
                 break
             }
         }
         downloadList = downloads
         saveDownloads()
+        
         return removedDownloads.isEmpty ? nil : removedDownloads
     }
     
@@ -229,4 +232,41 @@ import Capacitor
         task.resume()
     }
 
+    
+        /**
+        * Get the URL for this file, supporting file:// paths and
+        * files with directory mappings.
+        */
+    @objc public func getFileUrl(at path: String, in directory: String?) -> URL? {
+           if let directory = getDirectory(directory: directory) {
+               guard let dir = FileManager.default.urls(for: directory, in: .userDomainMask).first else {
+                   return nil
+               }
+               if !path.isEmpty {
+                   return dir.appendingPathComponent(path)
+               }
+               return dir
+           } else {
+               return URL(string: path)
+           }
+       }
+    
+    @objc func deleteFile(path:String) {
+         if let range = path.range(of: "/", options: .backwards) {
+            let fileName = String(path[range.upperBound...])
+            var directory = "LIBRARY"
+            guard let fileUrl = getFileUrl(at: fileName, in: directory) else {
+                CAPLog.print("Invalid path")
+                return
+            }
+
+            do {
+                if FileManager.default.fileExists(atPath: fileUrl.path) {
+                    try FileManager.default.removeItem(atPath: fileUrl.path)
+                }
+            } catch let error as NSError {
+                CAPLog.print(error.localizedDescription, error)
+            }
+        }
+    }
 }
