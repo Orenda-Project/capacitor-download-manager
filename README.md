@@ -5,7 +5,7 @@ Capacitor plugin for downloading files to native device
 ## Install
 
 ```bash
-npm install git+https://github.com/Orenda-Project/capacitor-download-manager.git#<tag>
+npm install git+https://github.com/Orenda-Project/capacitor-download-manager.git
 npx cap sync
 ```
 
@@ -45,9 +45,9 @@ startDownload(options: { url: string[]; }) => Promise<{ value: string[]; }>
 removeDownloads(options: { value: string[]; }) => Promise<{ value: string[]; }>
 ```
 
-| Param         | Type                        |
-| ------------- | ----------------------------|
-| **`options`** |<code>value: string[];</code>|
+| Param         | Type                            |
+| ------------- | --------------------------------|
+| **`options`** |<code>{ value: string[]; }</code>|
 
 **Returns:** <code>Promise&lt;{ value: string[]; }&gt;</code>
 
