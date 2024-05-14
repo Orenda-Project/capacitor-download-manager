@@ -45,9 +45,9 @@ startDownload(options: { url: string[]; }) => Promise<{ value: string[]; }>
 removeDownloads(options: { value: string[]; }) => Promise<{ value: string[]; }>
 ```
 
-| Param         | Type |
-| ------------- | ---- |
-| **`options`** |      |
+| Param         | Type                        |
+| ------------- | ----------------------------|
+| **`options`** |<code>value: string[];</code>|
 
 **Returns:** <code>Promise&lt;{ value: string[]; }&gt;</code>
 
