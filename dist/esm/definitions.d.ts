@@ -10,6 +10,9 @@ export interface DownloadManagerPlugin {
     }): Promise<{
         value: string[];
     }>;
+    resumeDownloads(): Promise<{
+        value: string;
+    }>;
     getDownloadList(): Promise<{
         value: string;
     }>;

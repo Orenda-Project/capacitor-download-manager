@@ -15,4 +15,7 @@ export class DownloadManagerWeb
   removeDownloads(options: { value: string[] }): Promise<{ value: string[] }> {
     return Promise.resolve({ value: options.value });
   }
+  resumeDownloads(): Promise<{ value: string }> {
+    return Promise.resolve({ value: '[]' });
+  }
 }

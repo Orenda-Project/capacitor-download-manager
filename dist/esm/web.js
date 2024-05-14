@@ -9,5 +9,8 @@ export class DownloadManagerWeb extends WebPlugin {
     removeDownloads(options) {
         return Promise.resolve({ value: options.value });
     }
+    resumeDownloads() {
+        return Promise.resolve({ value: '[]' });
+    }
 }
 //# sourceMappingURL=web.js.map

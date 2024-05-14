@@ -94,6 +94,21 @@ public class DownloadManagerPlugin extends Plugin implements FetchListener {
         }
     }
 
+    @PluginMethod
+    public void resumeDownloads() {
+        try {
+            initDownloadManager();
+            AsyncTask.execute(
+                    () -> {
+                        downloadManager.resumeDownloads();
+                    });
+        } catch (Exception e) {
+            JSObject ret = new JSObject();
+            ret.put("error", e.getMessage());
+            notifyListeners("resumeDownload", ret);
+        }
+    }
+
     @Override
     public void onAdded(@NonNull Download download) {
         Log.i(TAG, DownloadEvent.ON_ADDED + " : " + download);

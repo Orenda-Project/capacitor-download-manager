@@ -38,6 +38,16 @@
         "slug": "removedownloads"
       },
       {
+        "name": "resumeDownloads",
+        "signature": "() => Promise<{ value: string; }>",
+        "parameters": [],
+        "returns": "Promise<{ value: string; }>",
+        "tags": [],
+        "docs": "",
+        "complexTypes": [],
+        "slug": "resumedownloads"
+      },
+      {
         "name": "getDownloadList",
         "signature": "() => Promise<{ value: string; }>",
         "parameters": [],
