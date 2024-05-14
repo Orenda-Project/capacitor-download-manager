@@ -39,6 +39,40 @@ startDownload(options: { url: string[]; }) => Promise<{ value: string[]; }>
 
 ---
 
+### removeDownloads(...)
+
+```typescript
+removeDownloads(options: { value: string[]; }) => Promise<{ value: string[]; }>
+```
+
+| Param         | Type |
+| ------------- | ---- |
+| **`options`** |      |
+
+**Returns:** <code>Promise&lt;{ value: string[]; }&gt;</code>
+
+---
+
+### resumeDownloads()
+
+```typescript
+resumeDownloads() => Promise<{ value: string; }>
+```
+
+Resumes all paused downloads. Returns a promise that resolves with a string indicating the result of the resume operation.
+
+---
+
+### getDownloadList()
+
+```typescript
+getDownloadList() => Promise<{ value: string; }>
+```
+
+Retrieves the list of all current downloads. Returns a promise that resolves with a string representing the list of current downloads.
+
+---
+
 ### addListener(String, ...)
 
 ```typescript
