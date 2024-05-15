@@ -43,9 +43,7 @@ public class DownloadManagerPlugin extends Plugin implements FetchListener {
                 .execute(
                         () -> {
                             initDownloadManager();
-                            PluginCall _call = getSavedCall();
-                            System.out.println(_call);
-                            downloadManager.initDownloading(_call);
+                            downloadManager.initDownloading(call);
                         });
     }
 
@@ -71,11 +69,9 @@ public class DownloadManagerPlugin extends Plugin implements FetchListener {
 
                         List<Integer> ids = new ArrayList<>();
                         JSArray downloadIds = call.getArray("value");
-
                         for (int i = 0; i < downloadIds.length(); i++) {
                             ids.add(downloadIds.optInt(i));
                         }
-
                         downloadManager.deleteDownloads(ids);
                         call.resolve();
                     });
