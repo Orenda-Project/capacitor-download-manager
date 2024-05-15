@@ -49,18 +49,11 @@ public class DownloadManagerPlugin extends Plugin implements FetchListener {
                         });
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.R)
     @PluginMethod
     public void getDownloadList(PluginCall call) {
         try {
             initDownloadManager();
-            AsyncTask.execute(
-                    () -> {
-                        List<Download> downloadList = downloadManager.getFetchDownloads();
-                        JSObject ret = new JSObject();
-                        ret.put("download", new Gson().toJson(downloadList));
-                        call.resolve(ret);
-                    });
+            downloadManager.getDownloads(call);
         } catch (Exception e) {
             JSObject ret = new JSObject();
             ret.put("error", e.getMessage());

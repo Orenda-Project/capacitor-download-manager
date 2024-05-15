@@ -13,12 +13,12 @@ npx cap sync
 
 <docgen-index>
 
-- [`startDownload(...)`](#startdownload)
-- [`removeDownloads(...)`](#removedownloads)
-- [`resumeDownloads()`](#resumedownloads)
-- [`getDownloadList()`](#getdownloadlist)
-- [`addListener(string, ...)`](#addlistenerstring)
-- [Interfaces](#interfaces)
+* [`startDownload(...)`](#startdownload)
+* [`removeDownloads(...)`](#removedownloads)
+* [`resumeDownloads()`](#resumedownloads)
+* [`getDownloadList()`](#getdownloadlist)
+* [`addListener(string, ...)`](#addlistenerstring)
+* [Interfaces](#interfaces)
 
 </docgen-index>
 

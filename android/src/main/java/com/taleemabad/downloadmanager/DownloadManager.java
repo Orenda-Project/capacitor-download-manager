@@ -19,6 +19,7 @@ import com.tonyodev.fetch2okhttp.OkHttpDownloader;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import com.google.gson.Gson;
 
 public class DownloadManager {
 
@@ -106,7 +107,7 @@ public class DownloadManager {
         call.resolve(ret);
     }
 
-    public List<Download> getFetchDownloads() {
+    public void getDownloads(PluginCall call) {
         if (fetch == null) {
             fetch = init();
         }
@@ -115,18 +116,18 @@ public class DownloadManager {
                 groupId,
                 fetchGroup -> {
                     try {
-                        Log.i(TAG, "FetchGroup: " + fetchGroup.getDownloads());
                         List<Download> downloads = fetchGroup.getDownloads();
                         for (Download download : downloads) {
-                            Log.i(TAG, "Download File:: " + download.getId() + " : " + download.getStatus() + " => "
-                                    + download.getFile());
+                            Log.i(TAG, "Download File:: " + download);
                             downloadList.add(download);
                         }
+                        JSObject ret = new JSObject();
+                        ret.put("download", new Gson().toJson(downloadList));
+                        call.resolve(ret);
                     } catch (FetchException e) {
                         Log.i(TAG, "FetchException: " + e.getMessage());
                     }
                 });
-        return downloadList;
     }
 
     public void resumeDownloads() {
