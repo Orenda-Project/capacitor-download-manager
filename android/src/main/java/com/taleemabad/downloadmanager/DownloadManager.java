@@ -2,10 +2,13 @@ package com.taleemabad.downloadmanager;
 
 import android.content.Context;
 import android.util.Log;
+
 import androidx.annotation.NonNull;
+
 import com.getcapacitor.JSArray;
 import com.getcapacitor.JSObject;
 import com.getcapacitor.PluginCall;
+import com.google.gson.Gson;
 import com.tonyodev.fetch2.Download;
 import com.tonyodev.fetch2.Fetch;
 import com.tonyodev.fetch2.FetchConfiguration;
@@ -16,10 +19,10 @@ import com.tonyodev.fetch2.Request;
 import com.tonyodev.fetch2.exception.FetchException;
 import com.tonyodev.fetch2core.Downloader;
 import com.tonyodev.fetch2okhttp.OkHttpDownloader;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import com.google.gson.Gson;
 
 public class DownloadManager {
 
@@ -60,25 +63,14 @@ public class DownloadManager {
     }
 
     private Fetch init() {
-        return Fetch.Impl.getInstance(
-                new FetchConfiguration.Builder(mContext)
-                        .setHttpDownloader(new OkHttpDownloader(Downloader.FileDownloaderType.SEQUENTIAL))
-                        .setNamespace(namespace)
-                        .setGlobalNetworkType(NetworkType.ALL)
-                        .enableAutoStart(true)
-                        .enableRetryOnNetworkGain(true)
-                        .enableFileExistChecks(true)
-                        .enableLogging(true)
-                        .build());
+        return Fetch.Impl.getInstance(new FetchConfiguration.Builder(mContext).setHttpDownloader(new OkHttpDownloader(Downloader.FileDownloaderType.SEQUENTIAL)).setNamespace(namespace).setGlobalNetworkType(NetworkType.ALL).enableAutoStart(true).enableRetryOnNetworkGain(true).enableFileExistChecks(true).enableLogging(true).build());
     }
 
-    private void startDownloading(List<String> urls, FetchListener fetchListener) {
-        fetch.addListener(fetchListener);
-        fetch.enqueue(
-                getFetchRequests(urls),
-                updatedRequests -> {
-                    Log.i(TAG, "enqueue: " + updatedRequests);
-                });
+    private void startDownloading(List<String> urls) {
+        fetch.addListener(mFetchListener);
+        fetch.enqueue(getFetchRequests(urls), updatedRequests -> {
+            Log.i(TAG, "enqueue: " + updatedRequests);
+        });
     }
 
     private List<Request> getFetchRequests(List<String> urls) {
@@ -100,7 +92,7 @@ public class DownloadManager {
         try {
             JSArray url = call.getArray("url");
             ret.put("value", url);
-            startDownloading(url.toList(), mFetchListener);
+            startDownloading(url.toList());
         } catch (Exception e) {
             ret.put("error", e.getMessage());
         }
@@ -112,69 +104,69 @@ public class DownloadManager {
             fetch = init();
         }
         List<Download> downloadList = new ArrayList<>();
-        fetch.getFetchGroup(
-                groupId,
-                fetchGroup -> {
-                    try {
-                        List<Download> downloads = fetchGroup.getDownloads();
-                        for (Download download : downloads) {
-                            Log.i(TAG, "Download File:: " + download);
-                            downloadList.add(download);
-                        }
-                        JSObject ret = new JSObject();
-                        ret.put("download", new Gson().toJson(downloadList));
-                        call.resolve(ret);
-                    } catch (FetchException e) {
-                        Log.i(TAG, "FetchException: " + e.getMessage());
-                    }
-                });
+        fetch.getFetchGroup(groupId, fetchGroup -> {
+            try {
+                List<Download> downloads = fetchGroup.getDownloads();
+                for (Download download : downloads) {
+                    Log.i(TAG, "Download File:: " + download);
+                    downloadList.add(download);
+                }
+                JSObject ret = new JSObject();
+                ret.put("download", new Gson().toJson(downloadList));
+                call.resolve(ret);
+            } catch (FetchException e) {
+                Log.i(TAG, "FetchException: " + e.getMessage());
+            }
+        });
     }
 
     public void resumeDownloads() {
-        if (fetch == null) {
-            fetch = init();
-        }
-        fetch.getFetchGroup(
-                groupId,
-                fetchGroup -> {
-                    try {
-                        Log.i(TAG, "FetchGroup: " + fetchGroup.getId());
-                        List<Download> downloads = fetchGroup.getDownloads();
-                        for (Download download : downloads) {
-                            Log.i(TAG, "Download File:: " + download.getId() + " : " + download.getStatus() + " => "
-                                    + download.getFile());
-                            if (!new File(download.getFile()).exists()) {
-                                Log.i(TAG, "File Removed:: " + download.getId() + " => " + download.getFile());
-                                fetch.remove(download.getId());
-                            } else {
-                                switch (download.getStatus()) {
-                                    case COMPLETED ->
-                                        Log.i(TAG, "COMPLETED:: " + download.getId() + " => " + download.getStatus());
-                                    case PAUSED -> {
-                                        Log.i(TAG, "PAUSED:: " + download.getId() + " => " + download.getStatus());
-                                        fetch.resume(download.getId());
-                                    }
-                                    case FAILED -> {
-                                        Log.i(TAG, "FAILED:: " + download.getId() + " => " + download.getStatus());
-                                        fetch.retry(download.getId());
-                                    }
-                                    case CANCELLED -> {
-                                        Log.i(TAG, "CANCELLED:: " + download.getId() + " => " + download.getStatus());
-                                        fetch.resume(download.getId());
-                                    }
-                                    case QUEUED -> {
-                                        Log.i(TAG, "QUEUED:: " + download.getId() + " => " + download.getStatus());
-                                        fetch.resume(download.getId());
-                                    }
-                                    default ->
-                                        Log.i(TAG, "STATUS:: " + download.getId() + " => " + download.getStatus());
+        try {
+            if (fetch == null) {
+                fetch = init();
+            }
+            fetch.addListener(mFetchListener);
+            fetch.getFetchGroup(groupId, fetchGroup -> {
+                try {
+                    Log.i(TAG, "FetchGroup: " + fetchGroup.getId());
+                    List<Download> downloads = fetchGroup.getDownloads();
+                    for (Download download : downloads) {
+                        Log.i(TAG, "Download File:: " + download.getId() + " : " + download.getStatus() + " => " + download.getFile());
+                        if (!new File(download.getFile()).exists()) {
+                            Log.i(TAG, "File Removed:: " + download.getId() + " => " + download.getFile());
+                            fetch.remove(download.getId());
+                        } else {
+                            switch (download.getStatus()) {
+                               case PAUSED -> {
+                                    Log.i(TAG, "PAUSED:: " + download.getId() + " => " + download.getStatus());
+                                    fetch.resume(download.getId());
                                 }
+                                case FAILED -> {
+                                    Log.i(TAG, "FAILED:: " + download.getId() + " => " + download.getStatus());
+                                    fetch.retry(download.getId());
+                                }
+                                case CANCELLED -> {
+                                    Log.i(TAG, "CANCELLED:: " + download.getId() + " => " + download.getStatus());
+                                    fetch.retry(download.getId());
+                                }
+                                case QUEUED -> {
+                                    Log.i(TAG, "QUEUED:: " + download.getId() + " => " + download.getStatus());
+                                    fetch.enqueue(download.getRequest(),
+                                            result -> Log.i(TAG, "Request:: " + result),
+                                            updatedRequest -> Log.i(TAG, "Updated Request:: " + updatedRequest));
+                                }
+                                default ->
+                                        Log.i(TAG, "STATUS:: " + download.getId() + " => " + download.getStatus());
                             }
                         }
-                    } catch (FetchException e) {
-                        Log.i(TAG, "FetchException: " + e.getMessage());
                     }
-                });
+                } catch (FetchException e) {
+                    Log.i(TAG, "FetchException: " + e.getMessage());
+                }
+            });
+        } catch (Exception e) {
+            Log.i(TAG, "resumeDownloads: " + e.getMessage());
+        }
     }
 
     public void deleteDownloads(List<Integer> ids) {

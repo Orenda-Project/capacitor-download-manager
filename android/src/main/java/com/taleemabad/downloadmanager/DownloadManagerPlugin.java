@@ -1,6 +1,5 @@
 package com.taleemabad.downloadmanager;
 
-import android.os.AsyncTask;
 import android.os.Build;
 import android.util.Log;
 
@@ -38,13 +37,10 @@ public class DownloadManagerPlugin extends Plugin implements FetchListener {
     @PluginMethod
     public void startDownload(PluginCall call) {
         saveCall(call);
-        this.getActivity()
-                .getMainExecutor()
-                .execute(
-                        () -> {
-                            initDownloadManager();
-                            downloadManager.initDownloading(call);
-                        });
+        this.getActivity().getMainExecutor().execute(() -> {
+            initDownloadManager();
+            downloadManager.initDownloading(call);
+        });
     }
 
     @PluginMethod
@@ -64,17 +60,13 @@ public class DownloadManagerPlugin extends Plugin implements FetchListener {
     public void removeDownloads(PluginCall call) {
         try {
             initDownloadManager();
-            AsyncTask.execute(
-                    () -> {
-
-                        List<Integer> ids = new ArrayList<>();
-                        JSArray downloadIds = call.getArray("value");
-                        for (int i = 0; i < downloadIds.length(); i++) {
-                            ids.add(downloadIds.optInt(i));
-                        }
-                        downloadManager.deleteDownloads(ids);
-                        call.resolve();
-                    });
+            List<Integer> ids = new ArrayList<>();
+            JSArray downloadIds = call.getArray("value");
+            for (int i = 0; i < downloadIds.length(); i++) {
+                ids.add(downloadIds.optInt(i));
+            }
+            downloadManager.deleteDownloads(ids);
+            call.resolve();
         } catch (Exception e) {
             JSObject ret = new JSObject();
             ret.put("error", e.getMessage());
@@ -84,17 +76,16 @@ public class DownloadManagerPlugin extends Plugin implements FetchListener {
     }
 
     @PluginMethod
-    public void resumeDownloads() {
+    public void resumeDownloads(PluginCall call) {
         try {
             initDownloadManager();
-            AsyncTask.execute(
-                    () -> {
-                        downloadManager.resumeDownloads();
-                    });
+            downloadManager.resumeDownloads();
+            call.resolve();
         } catch (Exception e) {
             JSObject ret = new JSObject();
             ret.put("error", e.getMessage());
             notifyListeners("resumeDownload", ret);
+            call.reject(e.getMessage());
         }
     }
 
@@ -125,8 +116,7 @@ public class DownloadManagerPlugin extends Plugin implements FetchListener {
     @Override
     public void onDownloadBlockUpdated(@NonNull Download download, @NonNull DownloadBlock downloadBlock, int i) {
         Log.i(TAG, DownloadEvent.ON_DOWNLOAD_BLOCK_UPDATED + " : " + download);
-        notifyListeners(DownloadEvent.ON_DOWNLOAD_BLOCK_UPDATED,
-                new JSObject().put("download", new Gson().toJson(download)));
+        notifyListeners(DownloadEvent.ON_DOWNLOAD_BLOCK_UPDATED, new JSObject().put("download", new Gson().toJson(download)));
     }
 
     @Override
