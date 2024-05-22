@@ -20,7 +20,6 @@ import com.tonyodev.fetch2.exception.FetchException;
 import com.tonyodev.fetch2core.Downloader;
 import com.tonyodev.fetch2okhttp.OkHttpDownloader;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,7 +62,22 @@ public class DownloadManager {
     }
 
     private Fetch init() {
-        return Fetch.Impl.getInstance(new FetchConfiguration.Builder(mContext).setHttpDownloader(new OkHttpDownloader(Downloader.FileDownloaderType.SEQUENTIAL)).setNamespace(namespace).setGlobalNetworkType(NetworkType.ALL).enableAutoStart(true).enableRetryOnNetworkGain(true).enableFileExistChecks(true).enableLogging(true).build());
+        return Fetch.Impl.getInstance(
+                new FetchConfiguration.Builder(mContext)
+                        .setHttpDownloader(
+                                new OkHttpDownloader(
+                                        Downloader.FileDownloaderType.PARALLEL)
+                        )
+                        .setDownloadConcurrentLimit(2)
+                        .setAutoRetryMaxAttempts(3)
+                        .setNamespace(namespace)
+                        .setGlobalNetworkType(NetworkType.ALL)
+                        .enableAutoStart(true)
+                        .enableRetryOnNetworkGain(true)
+                        .enableFileExistChecks(true)
+                        .enableLogging(true)
+                        .build()
+        );
     }
 
     private void startDownloading(List<String> urls) {
@@ -126,44 +140,7 @@ public class DownloadManager {
                 fetch = init();
             }
             fetch.addListener(mFetchListener);
-            fetch.getFetchGroup(groupId, fetchGroup -> {
-                try {
-                    Log.i(TAG, "FetchGroup: " + fetchGroup.getId());
-                    List<Download> downloads = fetchGroup.getDownloads();
-                    for (Download download : downloads) {
-                        Log.i(TAG, "Download File:: " + download.getId() + " : " + download.getStatus() + " => " + download.getFile());
-                        if (!new File(download.getFile()).exists()) {
-                            Log.i(TAG, "File Removed:: " + download.getId() + " => " + download.getFile());
-                            fetch.remove(download.getId());
-                        } else {
-                            switch (download.getStatus()) {
-                               case PAUSED -> {
-                                    Log.i(TAG, "PAUSED:: " + download.getId() + " => " + download.getStatus());
-                                    fetch.resume(download.getId());
-                                }
-                                case FAILED -> {
-                                    Log.i(TAG, "FAILED:: " + download.getId() + " => " + download.getStatus());
-                                    fetch.retry(download.getId());
-                                }
-                                case CANCELLED -> {
-                                    Log.i(TAG, "CANCELLED:: " + download.getId() + " => " + download.getStatus());
-                                    fetch.retry(download.getId());
-                                }
-                                case QUEUED -> {
-                                    Log.i(TAG, "QUEUED:: " + download.getId() + " => " + download.getStatus());
-                                    fetch.enqueue(download.getRequest(),
-                                            result -> Log.i(TAG, "Request:: " + result),
-                                            updatedRequest -> Log.i(TAG, "Updated Request:: " + updatedRequest));
-                                }
-                                default ->
-                                        Log.i(TAG, "STATUS:: " + download.getId() + " => " + download.getStatus());
-                            }
-                        }
-                    }
-                } catch (FetchException e) {
-                    Log.i(TAG, "FetchException: " + e.getMessage());
-                }
-            });
+            fetch.resumeGroup(groupId);
         } catch (Exception e) {
             Log.i(TAG, "resumeDownloads: " + e.getMessage());
         }

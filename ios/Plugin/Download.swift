@@ -9,9 +9,9 @@
 import Foundation
 
 protocol DownloadDelegate: AnyObject {
-    func didFinish(_ donwloads: Download?)
-    func didError(_ donwloads: Download?)
-    func didProgress(_ donwloads: Download?)
+    func didFinish(_ downloads: Download?)
+    func didError(_ downloads: Download?)
+    func didProgress(_ downloads: Download?)
 }
 
 public struct Download: Codable {
