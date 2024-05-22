@@ -88,7 +88,7 @@ public class DownloadManagerPlugin: CAPPlugin {
                     if var newDownload = self.implementation.downloadList?[index] {
                         newDownload.downloaded = Int(bytes)
                         newDownload.total = Int(contentLength)
-                        newDownload.status = progress == 100 ? "COMPLETED" : "DONWLOADING"
+                        newDownload.status = progress == 100 ? "COMPLETED" : "DOWNLOADING"
                         self.implementation.downloadList?[index] = newDownload
                         self.implementation.saveDownloads()
                         let encoder = JSONEncoder()
@@ -108,7 +108,6 @@ public class DownloadManagerPlugin: CAPPlugin {
                         } catch {
                             CAPLog.print("Error encoding Download: \(error)")
                         }
-
                     }
                 }
             }
@@ -127,13 +126,11 @@ public class DownloadManagerPlugin: CAPPlugin {
         let contains = downloads.first { download in
             download.status != "COMPLETED"
         }
-        if contains != nil{ 
-            CAPLog.print("Pending Downloads ::" , contains ?? "nil")
+        if contains != nil {
             contains.map { file in
                 initiateDownloadFile(call: call, url: file.url)
             }
-        }else{
-            CAPLog.print("Pending Downloads ::" , contains ?? "nil")
         }
+        CAPLog.print("Pending Downloads ::" , contains ?? "nil")
     }
 }
