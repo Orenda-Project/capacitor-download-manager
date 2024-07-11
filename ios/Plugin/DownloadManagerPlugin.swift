@@ -70,6 +70,18 @@ public class DownloadManagerPlugin: CAPPlugin , DownloadDelegate {
         }
     }
     
+    @objc func startDownloadWithTag(_ call: CAPPluginCall) {
+        DownloadManager.shared.initDelegate(delegate:self)
+        guard let urls = call.getArray("url", JSObject.self) else {
+            call.reject("No valid urls provided")
+            return
+        }
+        for url in urls {
+            DownloadManager.shared.loadDownloads()
+            DownloadManager.shared.startDownloadWithTag(from: URL(string: url["url"] as! String)!, tag: url["tag"] as! String)
+        }
+    }
+    
     @objc func resumeDownloads(_ call: CAPPluginCall){
         DownloadManager.shared.initDelegate(delegate:self)
         DownloadManager.shared.loadDownloads()

@@ -14,11 +14,13 @@ npx cap sync
 <docgen-index>
 
 * [`startDownload(...)`](#startdownload)
+* [`startDownloadWithTag(...)`](#startdownloadwithtag)
 * [`removeDownloads(...)`](#removedownloads)
 * [`resumeDownloads()`](#resumedownloads)
 * [`getDownloadList()`](#getdownloadlist)
 * [`addListener(string, ...)`](#addlistenerstring)
 * [Interfaces](#interfaces)
+* [Type Aliases](#type-aliases)
 
 </docgen-index>
 

@@ -139,7 +139,15 @@ import Capacitor
     func startDownload(from url: URL) {
         let download = DownloadSession(url: url)
         activeDownloads[url] = download
-        addDownload(download: Download(file: url.lastPathComponent, fileUri: url.relativePath, url: url.absoluteString, status: DownloadStatus.ADDED, downloaded: 0, total: 0))
+        addDownload(download: Download(file: url.lastPathComponent, fileUri: url.relativePath, url: url.absoluteString, tag: "", status: DownloadStatus.ADDED, downloaded: 0, total: 0))
+        download.task = session.downloadTask(with: url)
+        download.task?.resume()
+    }
+    
+    func startDownloadWithTag(from url: URL , tag: String) {
+        let download = DownloadSession(url: url)
+        activeDownloads[url] = download
+        addDownload(download: Download(file: url.lastPathComponent, fileUri: url.relativePath, url: url.absoluteString, tag: tag, status: DownloadStatus.ADDED, downloaded: 0, total: 0))
         download.task = session.downloadTask(with: url)
         download.task?.resume()
     }

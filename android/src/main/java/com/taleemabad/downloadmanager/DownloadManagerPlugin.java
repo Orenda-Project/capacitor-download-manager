@@ -43,6 +43,16 @@ public class DownloadManagerPlugin extends Plugin implements FetchListener {
         });
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.R)
+    @PluginMethod
+    public void startDownloadWithTag(PluginCall call) {
+        saveCall(call);
+        this.getActivity().getMainExecutor().execute(() -> {
+            initDownloadManager();
+            downloadManager.initDownloadingWithTag(call);
+        });
+    }
+
     @PluginMethod
     public void getDownloadList(PluginCall call) {
         try {
@@ -116,7 +126,8 @@ public class DownloadManagerPlugin extends Plugin implements FetchListener {
     @Override
     public void onDownloadBlockUpdated(@NonNull Download download, @NonNull DownloadBlock downloadBlock, int i) {
         Log.i(TAG, DownloadEvent.ON_DOWNLOAD_BLOCK_UPDATED + " : " + download);
-        notifyListeners(DownloadEvent.ON_DOWNLOAD_BLOCK_UPDATED, new JSObject().put("download", new Gson().toJson(download)));
+        notifyListeners(DownloadEvent.ON_DOWNLOAD_BLOCK_UPDATED,
+                new JSObject().put("download", new Gson().toJson(download)));
     }
 
     @Override

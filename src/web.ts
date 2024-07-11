@@ -9,6 +9,11 @@ export class DownloadManagerWeb
   startDownload(options: { url: string[] }): Promise<{ value: string[] }> {
     return Promise.resolve({ value: options.url });
   }
+  startDownloadWithTag(options: {
+    url: { tag: string; url: string }[];
+  }): Promise<{ value: { tag: string; url: string }[] }> {
+    return Promise.resolve({ value: options.url });
+  }
   getDownloadList(): Promise<{ value: string }> {
     return Promise.resolve({ value: '[]' });
   }
