@@ -20,6 +20,9 @@ import com.tonyodev.fetch2.exception.FetchException;
 import com.tonyodev.fetch2core.Downloader;
 import com.tonyodev.fetch2okhttp.OkHttpDownloader;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -87,9 +90,11 @@ public class DownloadManager {
         });
     }
 
-    private void startDownloadingWithTag(List<JSObject> urls) {
+    private void startDownloadingWithTag(List<JSONObject> urls) {
+        System.out.println("startDownloadingWithTag: " + urls.toString());
         fetch.addListener(mFetchListener);
-        fetch.enqueue(getFetchRequestsWithTag(urls), updatedRequests -> {
+        List<Request> requests = getFetchRequestsWithTag(urls);
+        fetch.enqueue(requests, updatedRequests -> {
             Log.i(TAG, "enqueue: " + updatedRequests);
         });
     }
@@ -107,19 +112,25 @@ public class DownloadManager {
         }
         return requests;
     }
-    private List<Request> getFetchRequestsWithTag(List<JSObject> urls) {
+
+    private List<Request> getFetchRequestsWithTag(List<JSONObject> urls) {
         Log.i(TAG, "initFetch: " + urls.toString());
         ArrayList<Request> requests = new ArrayList<>();
-        for (JSObject url : urls) {
-            String urlStr = url.getString("url");
-            String tag = url.getString("tag");
-            String fileName = Utils.getFilePath(urlStr, mContext);
-            Request request = new Request(urlStr, fileName);
-            request.setGroupId(groupId);
-            request.setTag(tag);
-            request.setPriority(Priority.HIGH);
-            request.setNetworkType(NetworkType.ALL);
-            requests.add(request);
+        for (JSONObject url : urls) {
+            try {
+                String urlStr = url.getString("url");
+                String tag = url.getString("tag");
+                String fileName = Utils.getFilePath(urlStr, mContext);
+                Request request = new Request(urlStr, fileName);
+                request.setGroupId(groupId);
+                request.setTag(tag);
+                request.setPriority(Priority.HIGH);
+                request.setNetworkType(NetworkType.ALL);
+                requests.add(request);
+            } catch (JSONException e) {
+                e.printStackTrace();
+                Log.i(TAG, "getFetchRequestsWithTag: " + e.getMessage());
+            }
         }
         return requests;
     }
