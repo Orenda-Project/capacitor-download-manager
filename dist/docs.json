@@ -6,6 +6,16 @@
     "tags": [],
     "methods": [
       {
+        "name": "startScan",
+        "signature": "() => Promise<{ images: string[]; pdf: string | null; }>",
+        "parameters": [],
+        "returns": "Promise<{ images: string[]; pdf: string | null; }>",
+        "tags": [],
+        "docs": "",
+        "complexTypes": [],
+        "slug": "startscan"
+      },
+      {
         "name": "startDownload",
         "signature": "(options: { url: string[]; }) => Promise<{ value: string[]; }>",
         "parameters": [

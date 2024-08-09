@@ -6,6 +6,9 @@ export class DownloadManagerWeb
   extends WebPlugin
   implements DownloadManagerPlugin
 {
+  startScan(): Promise<{ images: string[], pdf: string | null }> {
+    return Promise.resolve({ images: [], pdf: null });
+  }
   startDownload(options: { url: string[] }): Promise<{ value: string[] }> {
     return Promise.resolve({ value: options.url });
   }

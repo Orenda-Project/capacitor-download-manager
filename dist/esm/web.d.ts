@@ -1,6 +1,10 @@
 import { WebPlugin } from '@capacitor/core';
 import type { DownloadManagerPlugin } from './definitions';
 export declare class DownloadManagerWeb extends WebPlugin implements DownloadManagerPlugin {
+    startScan(): Promise<{
+        images: string[];
+        pdf: string | null;
+    }>;
     startDownload(options: {
         url: string[];
     }): Promise<{

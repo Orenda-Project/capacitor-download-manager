@@ -1,5 +1,8 @@
 import { WebPlugin } from '@capacitor/core';
 export class DownloadManagerWeb extends WebPlugin {
+    startScan() {
+        return Promise.resolve({ images: [], pdf: null });
+    }
     startDownload(options) {
         return Promise.resolve({ value: options.url });
     }

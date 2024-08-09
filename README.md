@@ -13,6 +13,7 @@ npx cap sync
 
 <docgen-index>
 
+* [`startScan()`](#startscan)
 * [`startDownload(...)`](#startdownload)
 * [`removeDownloads(...)`](#removedownloads)
 * [`resumeDownloads()`](#resumedownloads)

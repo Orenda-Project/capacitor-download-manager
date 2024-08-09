@@ -9,6 +9,9 @@ const DownloadManager = core.registerPlugin('DownloadManager', {
 });
 
 class DownloadManagerWeb extends core.WebPlugin {
+    startScan() {
+        return Promise.resolve({ images: [], pdf: null });
+    }
     startDownload(options) {
         return Promise.resolve({ value: options.url });
     }

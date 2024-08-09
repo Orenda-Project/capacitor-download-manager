@@ -1,5 +1,9 @@
 import type { PluginListenerHandle } from '@capacitor/core';
 export interface DownloadManagerPlugin {
+    startScan(): Promise<{
+        images: string[];
+        pdf: string | null;
+    }>;
     startDownload(options: {
         url: string[];
     }): Promise<{
