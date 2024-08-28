@@ -55,11 +55,21 @@ public class DownloadManagerPlugin extends Plugin implements FetchListener {
 
 
     private void initScanner(PluginCall call, String mode) {
-        boolean enableGalleryImport = true;
-        GmsDocumentScannerOptions.Builder scannerOptions = new GmsDocumentScannerOptions.Builder()
-                .setResultFormats(GmsDocumentScannerOptions.RESULT_FORMAT_JPEG, GmsDocumentScannerOptions.RESULT_FORMAT_PDF)
-                .setGalleryImportAllowed(Boolean.TRUE.equals(call.getBoolean("enableGalleryImport", enableGalleryImport)))
+        boolean enableGalleryImport = Boolean.TRUE.equals(call.getBoolean("enableGalleryImport", true));
+        Integer pageLimit = call.getInt("pageLimit", 0);
+        String outputFormats = call.getString("outputFormats", "BOTH");
+
+        GmsDocumentScannerOptions.Builder scannerOptions = new GmsDocumentScannerOptions.Builder();
+
+        setOutputFormats(scannerOptions, outputFormats != null ? outputFormats : "BOTH");
+
+        scannerOptions
+                .setGalleryImportAllowed(enableGalleryImport)
                 .setScannerMode(getScannerMode(mode));
+
+        if (pageLimit != null && pageLimit > 0) {
+            scannerOptions.setPageLimit(pageLimit);
+        }
 
         GmsDocumentScanning.getClient(scannerOptions.build())
                 .getStartScanIntent(getActivity())
@@ -79,6 +89,16 @@ public class DownloadManagerPlugin extends Plugin implements FetchListener {
         initScanner(call, mode);
     }
 
+    private void setOutputFormats(GmsDocumentScannerOptions.Builder scannerOptions, String outputFormats) {
+        switch (outputFormats) {
+            case "JPEG" ->
+                    scannerOptions.setResultFormats(GmsDocumentScannerOptions.RESULT_FORMAT_JPEG);
+            case "PDF" ->
+                    scannerOptions.setResultFormats(GmsDocumentScannerOptions.RESULT_FORMAT_PDF);
+            default ->
+                    scannerOptions.setResultFormats(GmsDocumentScannerOptions.RESULT_FORMAT_JPEG, GmsDocumentScannerOptions.RESULT_FORMAT_PDF);
+        }
+    }
 
     private int getScannerMode(String mode) {
         switch (mode) {

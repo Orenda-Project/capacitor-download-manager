@@ -1,7 +1,8 @@
 import { WebPlugin } from '@capacitor/core';
 export class DownloadManagerWeb extends WebPlugin {
     startScan() {
-        return Promise.resolve({ images: [], pdf: null });
+        console.error('Document scanning is not supported on the web platform.');
+        return Promise.resolve({ images: undefined, pdf: null });
     }
     startDownload(options) {
         return Promise.resolve({ value: options.url });

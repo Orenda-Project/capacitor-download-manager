@@ -1,8 +1,13 @@
 import type { PluginListenerHandle } from '@capacitor/core';
 export interface DownloadManagerPlugin {
-    startScan(): Promise<{
-        images: string[];
-        pdf: string | null;
+    startScan(options?: {
+        pageLimit?: number;
+        mode?: string;
+        enableGalleryImport?: boolean;
+        outputFormats?: 'JPEG' | 'PDF' | 'BOTH';
+    }): Promise<{
+        images?: string[];
+        pdf?: string | null;
     }>;
     startDownload(options: {
         url: string[];

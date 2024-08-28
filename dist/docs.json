@@ -7,9 +7,15 @@
     "methods": [
       {
         "name": "startScan",
-        "signature": "() => Promise<{ images: string[]; pdf: string | null; }>",
-        "parameters": [],
-        "returns": "Promise<{ images: string[]; pdf: string | null; }>",
+        "signature": "(options?: { pageLimit?: number | undefined; mode?: string | undefined; enableGalleryImport?: boolean | undefined; outputFormats?: \"JPEG\" | \"PDF\" | \"BOTH\" | undefined; } | undefined) => Promise<{ images?: string[]; pdf?: string | null; }>",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "",
+            "type": "{ pageLimit?: number | undefined; mode?: string | undefined; enableGalleryImport?: boolean | undefined; outputFormats?: 'JPEG' | 'PDF' | 'BOTH' | undefined; } | undefined"
+          }
+        ],
+        "returns": "Promise<{ images?: string[] | undefined; pdf?: string | null | undefined; }>",
         "tags": [],
         "docs": "",
         "complexTypes": [],
