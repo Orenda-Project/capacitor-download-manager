@@ -8,6 +8,10 @@ export declare type ScanResult = {
     images?: string[];
     pdf?: string | null;
 };
+declare type URLRequest = {
+    tag: string;
+    url: string;
+};
 export interface DownloadManagerPlugin {
     startScan(options?: Partial<{
         pageLimit: number;

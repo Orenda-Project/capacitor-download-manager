@@ -190,6 +190,17 @@
           ]
         }
       ]
+    },
+    {
+      "name": "URLRequest",
+      "slug": "urlrequest",
+      "docs": "",
+      "types": [
+        {
+          "text": "{\n  tag: string;\n  url: string;\n}",
+          "complexTypes": []
+        }
+      ]
     }
   ],
   "pluginConfigs": []
