@@ -92,9 +92,9 @@ public class DownloadManagerPlugin extends Plugin implements FetchListener {
     private void configureScannerOptions(PluginCall call, GmsDocumentScannerOptions.Builder scannerOptions, String mode) {
         boolean enableGalleryImport = Boolean.TRUE.equals(call.getBoolean("enableGalleryImport", true));
         Integer pageLimit = call.getInt("pageLimit", 0);
-        String outputFormats = call.getString("outputFormats", "BOTH");
+        String outputFormats = call.getString("outputFormats", "JPEG");
 
-        setOutputFormats(scannerOptions, outputFormats != null ? outputFormats : "BOTH");
+        setOutputFormats(scannerOptions, outputFormats != null ? outputFormats : "JPEG");
         scannerOptions
                 .setGalleryImportAllowed(enableGalleryImport)
                 .setScannerMode(getScannerMode(mode));

@@ -1,12 +1,24 @@
 import type {PluginListenerHandle} from '@capacitor/core';
 
+
+export enum OutputFormats {
+    JPEG = 'JPEG',
+    PDF = 'PDF',
+    BOTH = 'BOTH',
+}
+
+export type ScanResult = {
+    images?: string[];
+    pdf?: string | null;
+};
+
 export interface DownloadManagerPlugin {
-    startScan(options?: {
-        pageLimit?: number;
-        mode?: string;
-        enableGalleryImport?: boolean;
-        outputFormats?: 'JPEG' | 'PDF' | 'BOTH';
-    }): Promise<{ images?: string[]; pdf?: string | null }>;
+    startScan(options?: Partial<{
+        pageLimit: number;
+        mode: string;
+        enableGalleryImport: boolean;
+        outputFormats: OutputFormats;
+    }>): Promise<ScanResult>;
 
     startDownload(options: { url: string[] }): Promise<{ value: string[] }>;
 

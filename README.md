@@ -20,6 +20,8 @@ npx cap sync
 * [`getDownloadList()`](#getdownloadlist)
 * [`addListener(string, ...)`](#addlistenerstring)
 * [Interfaces](#interfaces)
+* [Type Aliases](#type-aliases)
+* [Enums](#enums)
 
 </docgen-index>
 

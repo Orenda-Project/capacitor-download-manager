@@ -7,18 +7,22 @@
     "methods": [
       {
         "name": "startScan",
-        "signature": "(options?: { pageLimit?: number | undefined; mode?: string | undefined; enableGalleryImport?: boolean | undefined; outputFormats?: \"JPEG\" | \"PDF\" | \"BOTH\" | undefined; } | undefined) => Promise<{ images?: string[]; pdf?: string | null; }>",
+        "signature": "(options?: Partial<{ pageLimit: number; mode: string; enableGalleryImport: boolean; outputFormats: OutputFormats; }> | undefined) => Promise<ScanResult>",
         "parameters": [
           {
             "name": "options",
             "docs": "",
-            "type": "{ pageLimit?: number | undefined; mode?: string | undefined; enableGalleryImport?: boolean | undefined; outputFormats?: 'JPEG' | 'PDF' | 'BOTH' | undefined; } | undefined"
+            "type": "Partial<{ pageLimit: number; mode: string; enableGalleryImport: boolean; outputFormats: OutputFormats; }> | undefined"
           }
         ],
-        "returns": "Promise<{ images?: string[] | undefined; pdf?: string | null | undefined; }>",
+        "returns": "Promise<ScanResult>",
         "tags": [],
         "docs": "",
-        "complexTypes": [],
+        "complexTypes": [
+          "ScanResult",
+          "Partial",
+          "OutputFormats"
+        ],
         "slug": "startscan"
       },
       {
@@ -117,7 +121,58 @@
       ]
     }
   ],
-  "enums": [],
-  "typeAliases": [],
+  "enums": [
+    {
+      "name": "OutputFormats",
+      "slug": "outputformats",
+      "members": [
+        {
+          "name": "JPEG",
+          "value": "'JPEG'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "PDF",
+          "value": "'PDF'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "BOTH",
+          "value": "'BOTH'",
+          "tags": [],
+          "docs": ""
+        }
+      ]
+    }
+  ],
+  "typeAliases": [
+    {
+      "name": "ScanResult",
+      "slug": "scanresult",
+      "docs": "",
+      "types": [
+        {
+          "text": "{\n    images?: string[];\n    pdf?: string | null;\n}",
+          "complexTypes": []
+        }
+      ]
+    },
+    {
+      "name": "Partial",
+      "slug": "partial",
+      "docs": "Make all properties in T optional",
+      "types": [
+        {
+          "text": "{\r\n    [P in keyof T]?: T[P];\r\n}",
+          "complexTypes": [
+            "T",
+            "P"
+          ]
+        }
+      ]
+    }
+  ],
   "pluginConfigs": []
 }
