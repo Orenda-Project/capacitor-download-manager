@@ -6,6 +6,26 @@
     "tags": [],
     "methods": [
       {
+        "name": "startScan",
+        "signature": "(options?: Partial<{ pageLimit: number; mode: string; enableGalleryImport: boolean; outputFormats: OutputFormats; }> | undefined) => Promise<ScanResult>",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "",
+            "type": "Partial<{ pageLimit: number; mode: string; enableGalleryImport: boolean; outputFormats: OutputFormats; }> | undefined"
+          }
+        ],
+        "returns": "Promise<ScanResult>",
+        "tags": [],
+        "docs": "",
+        "complexTypes": [
+          "ScanResult",
+          "Partial",
+          "OutputFormats"
+        ],
+        "slug": "startscan"
+      },
+      {
         "name": "startDownload",
         "signature": "(options: { url: string[]; }) => Promise<{ value: string[]; }>",
         "parameters": [
@@ -119,8 +139,58 @@
       ]
     }
   ],
-  "enums": [],
+  "enums": [
+    {
+      "name": "OutputFormats",
+      "slug": "outputformats",
+      "members": [
+        {
+          "name": "JPEG",
+          "value": "'JPEG'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "PDF",
+          "value": "'PDF'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "BOTH",
+          "value": "'BOTH'",
+          "tags": [],
+          "docs": ""
+        }
+      ]
+    }
+  ],
   "typeAliases": [
+    {
+      "name": "ScanResult",
+      "slug": "scanresult",
+      "docs": "",
+      "types": [
+        {
+          "text": "{\n    images?: string[];\n    pdf?: string | null;\n}",
+          "complexTypes": []
+        }
+      ]
+    },
+    {
+      "name": "Partial",
+      "slug": "partial",
+      "docs": "Make all properties in T optional",
+      "types": [
+        {
+          "text": "{\r\n    [P in keyof T]?: T[P];\r\n}",
+          "complexTypes": [
+            "T",
+            "P"
+          ]
+        }
+      ]
+    },
     {
       "name": "URLRequest",
       "slug": "urlrequest",
