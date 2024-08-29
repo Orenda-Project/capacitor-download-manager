@@ -22,6 +22,24 @@
         "slug": "startdownload"
       },
       {
+        "name": "startDownloadWithTag",
+        "signature": "(options: { url: URLRequest[]; }) => Promise<{ value: URLRequest[]; }>",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "",
+            "type": "{ url: URLRequest[]; }"
+          }
+        ],
+        "returns": "Promise<{ value: URLRequest[]; }>",
+        "tags": [],
+        "docs": "",
+        "complexTypes": [
+          "URLRequest"
+        ],
+        "slug": "startdownloadwithtag"
+      },
+      {
         "name": "removeDownloads",
         "signature": "(options: { value: string[]; }) => Promise<{ value: string[]; }>",
         "parameters": [
@@ -102,6 +120,18 @@
     }
   ],
   "enums": [],
-  "typeAliases": [],
+  "typeAliases": [
+    {
+      "name": "URLRequest",
+      "slug": "urlrequest",
+      "docs": "",
+      "types": [
+        {
+          "text": "{\n  tag: string;\n  url: string;\n}",
+          "complexTypes": []
+        }
+      ]
+    }
+  ],
   "pluginConfigs": []
 }

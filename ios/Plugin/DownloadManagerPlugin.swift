@@ -6,11 +6,14 @@ import Capacitor
  * here: https://capacitorjs.com/docs/plugins/ios
  */
 @objc(DownloadManagerPlugin)
-public class DownloadManagerPlugin: CAPPlugin {
-    private let implementation = DownloadManager()
+public class DownloadManagerPlugin: CAPPlugin , DownloadDelegate {
+    
+    let encoder = JSONEncoder()
     
     @objc func getDownloadList(_ call: CAPPluginCall) {
-        guard let downloads = self.implementation.fetchDownloads() else {
+        DownloadManager.shared.initDelegate(delegate:self)
+        DownloadManager.shared.loadDownloads()
+        guard let downloads = DownloadManager.shared.fetchDownloads() else {
             call.reject("No downloads found!")
             return
         }
@@ -26,16 +29,18 @@ public class DownloadManagerPlugin: CAPPlugin {
             CAPLog.print("Error encoding Download: \(error)")
             call.reject("No downloads found!")
         }
-
+        
     }
     
     @objc func removeDownloads(_ call: CAPPluginCall) {
+        DownloadManager.shared.initDelegate(delegate:self)
+        DownloadManager.shared.loadDownloads()
         guard let items = call.getArray("value", String.self) else {
             call.reject("Not a valid data provided!")
             return
         }
         if !items.isEmpty {
-            if let removedDownloads = self.implementation.deleteDownloads(by: items){
+            if let removedDownloads = DownloadManager.shared.deleteDownloads(by: items){
                 removedDownloads.forEach { download in
                     let encoder = JSONEncoder()
                     encoder.outputFormatting = .prettyPrinted
@@ -52,85 +57,56 @@ public class DownloadManagerPlugin: CAPPlugin {
             }
         }
     }
-   
+    
     @objc func startDownload(_ call: CAPPluginCall) {
+        DownloadManager.shared.initDelegate(delegate:self)
         guard let urls = call.getArray("url", String.self) else {
             call.reject("No valid urls provided")
             return
         }
-        guard let downloads = self.implementation.fetchDownloads() else { return }
         for url in urls {
-            let contains = downloads.first { download in
-                download.url == url
-            }
-            if contains == nil {
-                initiateDownloadFile(call: call, url: url)
-            } else {
-                let encoder = JSONEncoder()
-                encoder.outputFormatting = .prettyPrinted
-                do {
-                    let jsonData = try encoder.encode(contains)
-                    if let jsonString = String(data: jsonData, encoding: .utf8) {
-                        self.notifyListeners("onCompleted", data: ["download": jsonString])
-                    }
-                } catch {
-                    CAPLog.print("Error encoding Download: \(error)")
-                }
-            }
+            DownloadManager.shared.loadDownloads()
+            DownloadManager.shared.startDownload(from: URL(string: url)!)
         }
     }
     
-    func initiateDownloadFile(call:CAPPluginCall, url:String){
-        let progressEmitter: DownloadManager.ProgressEmitter = { bytes, contentLength in
-            let progress = (Int(bytes) / Int(contentLength)) * 100
-            if (progress % 10) == 0 {
-                if let index = self.implementation.downloadList?.firstIndex(where: { $0.url == url }) {
-                    if var newDownload = self.implementation.downloadList?[index] {
-                        newDownload.downloaded = Int(bytes)
-                        newDownload.total = Int(contentLength)
-                        newDownload.status = progress == 100 ? "COMPLETED" : "DOWNLOADING"
-                        self.implementation.downloadList?[index] = newDownload
-                        self.implementation.saveDownloads()
-                        let encoder = JSONEncoder()
-                        encoder.outputFormatting = .prettyPrinted
-                        do {
-                            let jsonData = try encoder.encode(newDownload)
-                            if let jsonString = String(data: jsonData, encoding: .utf8) {
-                                CAPLog.print(jsonString)
-                                if Int(bytes) == Int(contentLength) {
-                                    CAPLog.print("onCompleted","download \(jsonString)")
-                                    self.notifyListeners("onCompleted", data: ["download": jsonString])
-                                } else {
-                                    CAPLog.print("onProgress","download \(jsonString)")
-                                    self.notifyListeners("onProgress", data: ["download": jsonString])
-                                }
-                            }
-                        } catch {
-                            CAPLog.print("Error encoding Download: \(error)")
-                        }
-                    }
-                }
-            }
+    @objc func startDownloadWithTag(_ call: CAPPluginCall) {
+        DownloadManager.shared.initDelegate(delegate:self)
+        guard let urls = call.getArray("url", JSObject.self) else {
+            call.reject("No valid urls provided")
+            return
         }
-        do {
-            if let urlString = URL(string: url) {
-                try implementation.downloadFile(call: call, url: urlString, emitter: progressEmitter, config: bridge?.config)
-            } else {return}
-        } catch let error {
-            call.reject(error.localizedDescription)
+        for url in urls {
+            DownloadManager.shared.loadDownloads()
+            DownloadManager.shared.startDownloadWithTag(from: URL(string: url["url"] as! String)!, tag: url["tag"] as! String)
         }
     }
     
     @objc func resumeDownloads(_ call: CAPPluginCall){
-        guard let downloads = self.implementation.fetchDownloads() else { return }
-        let contains = downloads.first { download in
-            download.status != "COMPLETED"
+        DownloadManager.shared.initDelegate(delegate:self)
+        DownloadManager.shared.loadDownloads()
+        DownloadManager.shared.resumeActives()
+    }
+    
+    func onStatusChange(_ download: Download?, _ status: DownloadCallback) {
+        if let download = download {
+            handleDownload(download: download, event: status)
         }
-        if contains != nil {
-            contains.map { file in
-                initiateDownloadFile(call: call, url: file.url)
+    }
+    
+    func handleDownload(download: Download, event: DownloadCallback){
+        do {
+            encoder.outputFormatting = .prettyPrinted
+            let jsonData = try encoder.encode(download)
+            if let jsonString = String(data: jsonData, encoding: .utf8) {
+                CAPLog.print(["download": jsonString])
+                self.notifyListeners(event.rawValue, data: ["download": jsonString])
             }
+        } catch {
+            CAPLog.print("Error encoding Download: \(error)")
         }
-        CAPLog.print("Pending Downloads ::" , contains ?? "nil")
     }
 }
+
+
+

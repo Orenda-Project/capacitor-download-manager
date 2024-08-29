@@ -1,7 +1,14 @@
 import type { PluginListenerHandle } from '@capacitor/core';
 
+type URLRequest = {
+  tag: string;
+  url: string;
+};
 export interface DownloadManagerPlugin {
   startDownload(options: { url: string[] }): Promise<{ value: string[] }>;
+  startDownloadWithTag(options: {
+    url: URLRequest[];
+  }): Promise<{ value: URLRequest[] }>;
   removeDownloads(options: { value: string[] }): Promise<{ value: string[] }>;
   resumeDownloads(): Promise<{ value: string }>;
   getDownloadList(): Promise<{ value: string }>;
