@@ -20,6 +20,11 @@ export interface DownloadManagerPlugin {
     }): Promise<{
         value: string[];
     }>;
+    startDownloadWithTag(options: {
+        url: URLRequest[];
+    }): Promise<{
+        value: URLRequest[];
+    }>;
     removeDownloads(options: {
         value: string[];
     }): Promise<{
@@ -35,3 +40,4 @@ export interface DownloadManagerPlugin {
         result: string;
     }) => void): PluginListenerHandle;
 }
+export {};

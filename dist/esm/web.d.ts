@@ -10,6 +10,17 @@ export declare class DownloadManagerWeb extends WebPlugin implements DownloadMan
     }): Promise<{
         value: string[];
     }>;
+    startDownloadWithTag(options: {
+        url: {
+            tag: string;
+            url: string;
+        }[];
+    }): Promise<{
+        value: {
+            tag: string;
+            url: string;
+        }[];
+    }>;
     getDownloadList(): Promise<{
         value: string;
     }>;

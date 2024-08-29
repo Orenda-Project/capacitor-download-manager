@@ -42,6 +42,24 @@
         "slug": "startdownload"
       },
       {
+        "name": "startDownloadWithTag",
+        "signature": "(options: { url: URLRequest[]; }) => Promise<{ value: URLRequest[]; }>",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "",
+            "type": "{ url: URLRequest[]; }"
+          }
+        ],
+        "returns": "Promise<{ value: URLRequest[]; }>",
+        "tags": [],
+        "docs": "",
+        "complexTypes": [
+          "URLRequest"
+        ],
+        "slug": "startdownloadwithtag"
+      },
+      {
         "name": "removeDownloads",
         "signature": "(options: { value: string[]; }) => Promise<{ value: string[]; }>",
         "parameters": [

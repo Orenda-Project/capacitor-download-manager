@@ -23,6 +23,9 @@ class DownloadManagerWeb extends core.WebPlugin {
     startDownload(options) {
         return Promise.resolve({ value: options.url });
     }
+    startDownloadWithTag(options) {
+        return Promise.resolve({ value: options.url });
+    }
     getDownloadList() {
         return Promise.resolve({ value: '[]' });
     }
