@@ -32,6 +32,8 @@ export interface DownloadManagerPlugin {
     
     removeDownloads(options: { value: string[] }): Promise<{ value: string[] }>;
 
+    pauseDownloads(options: { value: string[] }): Promise<{ value: string[] }>;
+
     resumeDownloads(): Promise<{ value: string }>;
 
     getDownloadList(): Promise<{ value: string }>;
