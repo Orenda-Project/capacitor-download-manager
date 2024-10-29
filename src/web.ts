@@ -10,7 +10,6 @@ export class DownloadManagerWeb
     console.error('Document scanning is not supported on the web platform.');
     return Promise.resolve({ images: undefined, pdf: null });
   }
-
   startDownload(options: { url: string[] }): Promise<{ value: string[] }> {
     return Promise.resolve({ value: options.url });
   }
@@ -23,6 +22,9 @@ export class DownloadManagerWeb
     return Promise.resolve({ value: '[]' });
   }
   removeDownloads(options: { value: string[] }): Promise<{ value: string[] }> {
+    return Promise.resolve({ value: options.value });
+  }
+  pauseDownloads(options: { value: string[] }): Promise<{ value: string[] }> {
     return Promise.resolve({ value: options.value });
   }
   resumeDownloads(): Promise<{ value: string }> {

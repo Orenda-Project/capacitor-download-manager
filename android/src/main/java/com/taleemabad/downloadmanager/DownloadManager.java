@@ -202,4 +202,15 @@ public class DownloadManager {
             Log.i(TAG, "deleteDownloads: " + e.getMessage());
         }
     }
+
+    public void pauseDownloads(List<Integer> ids) {
+        try {
+            if (fetch == null) {
+                fetch = init();
+            }
+            fetch.pause(ids);
+        } catch (Exception e) {
+            Log.i(TAG, "pauseDownloads: " + e.getMessage());
+        }
+    }
 }

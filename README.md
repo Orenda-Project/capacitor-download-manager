@@ -17,6 +17,7 @@ npx cap sync
 * [`startDownload(...)`](#startdownload)
 * [`startDownloadWithTag(...)`](#startdownloadwithtag)
 * [`removeDownloads(...)`](#removedownloads)
+* [`pauseDownloads(...)`](#pausedownloads)
 * [`resumeDownloads()`](#resumedownloads)
 * [`getDownloadList()`](#getdownloadlist)
 * [`addListener(string, ...)`](#addlistenerstring)

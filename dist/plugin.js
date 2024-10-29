@@ -29,6 +29,9 @@ var capacitorDownloadManager = (function (exports, core) {
         removeDownloads(options) {
             return Promise.resolve({ value: options.value });
         }
+        pauseDownloads(options) {
+            return Promise.resolve({ value: options.value });
+        }
         resumeDownloads() {
             return Promise.resolve({ value: '[]' });
         }

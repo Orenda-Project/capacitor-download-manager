@@ -88,6 +88,15 @@ public class DownloadManagerPlugin: CAPPlugin , DownloadDelegate {
         DownloadManager.shared.resumeActives()
     }
     
+    @objc func pauseDownloads(_ call: CAPPluginCall) {
+        DownloadManager.shared.initDelegate(delegate:self)
+        guard let urls = call.getArray("url", String.self) else {
+            call.reject("No valid urls provided")
+            return
+        }
+        DownloadManager.shared.pauseActives(urls: urls)
+    }
+    
     func onStatusChange(_ download: Download?, _ status: DownloadCallback) {
         if let download = download {
             handleDownload(download: download, event: status)

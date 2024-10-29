@@ -220,6 +220,25 @@ public class DownloadManagerPlugin extends Plugin implements FetchListener {
     }
 
     @PluginMethod
+    public void pauseDownloads(PluginCall call) {
+        try {
+            initDownloadManager();
+            List<Integer> ids = new ArrayList<>();
+            JSArray downloadIds = call.getArray("value");
+            for (int i = 0; i < downloadIds.length(); i++) {
+                ids.add(downloadIds.optInt(i));
+            }
+            downloadManager.pauseDownloads(ids);
+            call.resolve();
+        } catch (Exception e) {
+            JSObject ret = new JSObject();
+            ret.put("error", e.getMessage());
+            notifyListeners("pauseDownload", ret);
+            call.reject(e.getMessage());
+        }
+    }
+
+    @PluginMethod
     public void resumeDownloads(PluginCall call) {
         try {
             initDownloadManager();
