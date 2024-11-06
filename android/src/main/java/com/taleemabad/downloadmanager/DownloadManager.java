@@ -69,9 +69,9 @@ public class DownloadManager {
                 new FetchConfiguration.Builder(mContext)
                         .setHttpDownloader(
                                 new OkHttpDownloader(
-                                        Downloader.FileDownloaderType.PARALLEL)
+                                        Downloader.FileDownloaderType.SEQUENTIAL)
                         )
-                        .setDownloadConcurrentLimit(2)
+                        .setDownloadConcurrentLimit(1)
                         .setAutoRetryMaxAttempts(3)
                         .setNamespace(namespace)
                         .setGlobalNetworkType(NetworkType.ALL)
