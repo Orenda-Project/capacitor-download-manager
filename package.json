@@ -1,6 +1,6 @@
 {
   "name": "capacitor-download-manager",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "description": "Capacitor plugin for downloading files to native device",
   "main": "dist/plugin.cjs.js",
   "module": "dist/esm/index.js",
