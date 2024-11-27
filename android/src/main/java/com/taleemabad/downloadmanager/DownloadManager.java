@@ -91,7 +91,6 @@ public class DownloadManager {
     }
 
     private void startDownloadingWithTag(List<JSONObject> urls) {
-        System.out.println("startDownloadingWithTag: " + urls.toString());
         fetch.addListener(mFetchListener);
         List<Request> requests = getFetchRequestsWithTag(urls);
         fetch.enqueue(requests, updatedRequests -> {
@@ -100,7 +99,6 @@ public class DownloadManager {
     }
 
     private List<Request> getFetchRequests(List<String> urls) {
-        Log.i(TAG, "initFetch: " + urls.toString());
         ArrayList<Request> requests = new ArrayList<>();
         for (String url : urls) {
             String fileName = Utils.getFilePath(url, mContext);
