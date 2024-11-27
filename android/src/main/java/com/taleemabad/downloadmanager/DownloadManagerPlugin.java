@@ -59,6 +59,160 @@ public class DownloadManagerPlugin extends Plugin implements FetchListener {
             downloadManager = DownloadManager.getInstance(this.getActivity(), this);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.R)
+    @PluginMethod
+    public void startDownload(PluginCall call) {
+        saveCall(call);
+        initDownloadManager();
+        downloadManager.initDownloading(call);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.R)
+    @PluginMethod
+    public void startDownloadWithTag(PluginCall call) {
+        saveCall(call);
+        initDownloadManager();
+        downloadManager.initDownloadingWithTag(call);
+    }
+
+    @PluginMethod
+    public void getDownloadList(PluginCall call) {
+        try {
+            initDownloadManager();
+            downloadManager.getDownloads(call);
+        } catch (Exception e) {
+            JSObject ret = new JSObject();
+            ret.put("error", e.getMessage());
+            notifyListeners("downloadList", ret);
+            call.reject(e.getMessage());
+        }
+    }
+
+    @PluginMethod
+    public void removeDownloads(PluginCall call) {
+        try {
+            initDownloadManager();
+            List<Integer> ids = new ArrayList<>();
+            JSArray downloadIds = call.getArray("value");
+            for (int i = 0; i < downloadIds.length(); i++) {
+                ids.add(downloadIds.optInt(i));
+            }
+            downloadManager.deleteDownloads(ids);
+            call.resolve();
+        } catch (Exception e) {
+            JSObject ret = new JSObject();
+            ret.put("error", e.getMessage());
+            notifyListeners("removeDownload", ret);
+            call.reject(e.getMessage());
+        }
+    }
+
+    @PluginMethod
+    public void pauseDownloads(PluginCall call) {
+        try {
+            initDownloadManager();
+            List<Integer> ids = new ArrayList<>();
+            JSArray downloadIds = call.getArray("value");
+            for (int i = 0; i < downloadIds.length(); i++) {
+                ids.add(downloadIds.optInt(i));
+            }
+            downloadManager.pauseDownloads(ids);
+            call.resolve();
+        } catch (Exception e) {
+            JSObject ret = new JSObject();
+            ret.put("error", e.getMessage());
+            notifyListeners("pauseDownload", ret);
+            call.reject(e.getMessage());
+        }
+    }
+
+    @PluginMethod
+    public void resumeDownloads(PluginCall call) {
+        try {
+            initDownloadManager();
+            downloadManager.resumeDownloads();
+            call.resolve();
+        } catch (Exception e) {
+            JSObject ret = new JSObject();
+            ret.put("error", e.getMessage());
+            notifyListeners("resumeDownload", ret);
+            call.reject(e.getMessage());
+        }
+    }
+
+    @Override
+    public void onAdded(@NonNull Download download) {
+        Log.i(TAG, DownloadEvent.ON_ADDED + " : " + download);
+        notifyListeners(DownloadEvent.ON_ADDED, new JSObject().put("download", new Gson().toJson(download)));
+    }
+
+    @Override
+    public void onCancelled(@NonNull Download download) {
+        Log.i(TAG, DownloadEvent.ON_CANCELLED + download);
+    }
+
+    @Override
+    public void onCompleted(@NonNull Download download) {
+        Log.i(TAG, DownloadEvent.ON_COMPLETED + download);
+        notifyListeners(DownloadEvent.ON_COMPLETED, new JSObject().put("download", new Gson().toJson(download)));
+    }
+
+    @Override
+    public void onDeleted(@NonNull Download download) {
+        Log.i(TAG, DownloadEvent.ON_DELETED + download);
+        notifyListeners(DownloadEvent.ON_DELETED, new JSObject().put("download", new Gson().toJson(download)));
+    }
+
+    @Override
+    public void onDownloadBlockUpdated(@NonNull Download download, @NonNull DownloadBlock downloadBlock, int i) {
+        Log.i(TAG, DownloadEvent.ON_DOWNLOAD_BLOCK_UPDATED + " : " + download);
+    }
+
+    @Override
+    public void onError(@NonNull Download download, @NonNull Error error, @Nullable Throwable throwable) {
+        Log.i(TAG, DownloadEvent.ON_ERROR + " : " + download);
+        notifyListeners(DownloadEvent.ON_ERROR, new JSObject().put("download", new Gson().toJson(download)));
+    }
+
+    @Override
+    public void onPaused(@NonNull Download download) {
+        Log.i(TAG, DownloadEvent.ON_PAUSED + " : " + download);
+    }
+
+    @Override
+    public void onProgress(@NonNull Download download, long l, long l1) {
+        Log.i(TAG, DownloadEvent.ON_PROGRESS + " : " + download);
+        notifyListeners(DownloadEvent.ON_PROGRESS, new JSObject().put("download", new Gson().toJson(download)));
+    }
+
+    @Override
+    public void onQueued(@NonNull Download download, boolean b) {
+        Log.i(TAG, DownloadEvent.ON_QUEUED + " : " + download);
+    }
+
+    @Override
+    public void onRemoved(@NonNull Download download) {
+        Log.i(TAG, DownloadEvent.ON_REMOVED + " : " + download);
+        notifyListeners(DownloadEvent.ON_REMOVED, new JSObject().put("download", new Gson().toJson(download)));
+    }
+
+    @Override
+    public void onResumed(@NonNull Download download) {
+        Log.i(TAG, DownloadEvent.ON_RESUMED + " : " + download);
+        notifyListeners(DownloadEvent.ON_RESUMED, new JSObject().put("download", new Gson().toJson(download)));
+    }
+
+    @Override
+    public void onStarted(@NonNull Download download, @NonNull List<? extends DownloadBlock> list, int i) {
+        Log.i(TAG, DownloadEvent.ON_STARTED + " : " + download);
+    }
+
+    @Override
+    public void onWaitingNetwork(@NonNull Download download) {
+        Log.i(TAG, DownloadEvent.ON_WAITING_NETWORK + " : " + download);
+    }
+
+    /*/////////////////////// Scanner ////////////////////////////*/
 
     /**
      * Initialize the document scanner and configure its settings.
@@ -166,168 +320,4 @@ public class DownloadManagerPlugin extends Plugin implements FetchListener {
         };
     }
 
-
-    @RequiresApi(api = Build.VERSION_CODES.R)
-    @PluginMethod
-    public void startDownload(PluginCall call) {
-        saveCall(call);
-        this.getActivity().getMainExecutor().execute(() -> {
-            initDownloadManager();
-            downloadManager.initDownloading(call);
-        });
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.R)
-    @PluginMethod
-    public void startDownloadWithTag(PluginCall call) {
-        saveCall(call);
-        this.getActivity().getMainExecutor().execute(() -> {
-            initDownloadManager();
-            downloadManager.initDownloadingWithTag(call);
-        });
-    }
-
-    @PluginMethod
-    public void getDownloadList(PluginCall call) {
-        try {
-            initDownloadManager();
-            downloadManager.getDownloads(call);
-        } catch (Exception e) {
-            JSObject ret = new JSObject();
-            ret.put("error", e.getMessage());
-            notifyListeners("downloadList", ret);
-            call.reject(e.getMessage());
-        }
-    }
-
-    @PluginMethod
-    public void removeDownloads(PluginCall call) {
-        try {
-            initDownloadManager();
-            List<Integer> ids = new ArrayList<>();
-            JSArray downloadIds = call.getArray("value");
-            for (int i = 0; i < downloadIds.length(); i++) {
-                ids.add(downloadIds.optInt(i));
-            }
-            downloadManager.deleteDownloads(ids);
-            call.resolve();
-        } catch (Exception e) {
-            JSObject ret = new JSObject();
-            ret.put("error", e.getMessage());
-            notifyListeners("removeDownload", ret);
-            call.reject(e.getMessage());
-        }
-    }
-
-    @PluginMethod
-    public void pauseDownloads(PluginCall call) {
-        try {
-            initDownloadManager();
-            List<Integer> ids = new ArrayList<>();
-            JSArray downloadIds = call.getArray("value");
-            for (int i = 0; i < downloadIds.length(); i++) {
-                ids.add(downloadIds.optInt(i));
-            }
-            downloadManager.pauseDownloads(ids);
-            call.resolve();
-        } catch (Exception e) {
-            JSObject ret = new JSObject();
-            ret.put("error", e.getMessage());
-            notifyListeners("pauseDownload", ret);
-            call.reject(e.getMessage());
-        }
-    }
-
-    @PluginMethod
-    public void resumeDownloads(PluginCall call) {
-        try {
-            initDownloadManager();
-            downloadManager.resumeDownloads();
-            call.resolve();
-        } catch (Exception e) {
-            JSObject ret = new JSObject();
-            ret.put("error", e.getMessage());
-            notifyListeners("resumeDownload", ret);
-            call.reject(e.getMessage());
-        }
-    }
-
-    @Override
-    public void onAdded(@NonNull Download download) {
-        Log.i(TAG, DownloadEvent.ON_ADDED + " : " + download);
-        notifyListeners(DownloadEvent.ON_ADDED, new JSObject().put("download", new Gson().toJson(download)));
-    }
-
-    @Override
-    public void onCancelled(@NonNull Download download) {
-        Log.i(TAG, DownloadEvent.ON_CANCELLED + download);
-        notifyListeners(DownloadEvent.ON_CANCELLED, new JSObject().put("download", new Gson().toJson(download)));
-    }
-
-    @Override
-    public void onCompleted(@NonNull Download download) {
-        Log.i(TAG, DownloadEvent.ON_COMPLETED + download);
-        notifyListeners(DownloadEvent.ON_COMPLETED, new JSObject().put("download", new Gson().toJson(download)));
-    }
-
-    @Override
-    public void onDeleted(@NonNull Download download) {
-        Log.i(TAG, DownloadEvent.ON_DELETED + download);
-        notifyListeners(DownloadEvent.ON_DELETED, new JSObject().put("download", new Gson().toJson(download)));
-    }
-
-    @Override
-    public void onDownloadBlockUpdated(@NonNull Download download, @NonNull DownloadBlock downloadBlock, int i) {
-        Log.i(TAG, DownloadEvent.ON_DOWNLOAD_BLOCK_UPDATED + " : " + download);
-        notifyListeners(DownloadEvent.ON_DOWNLOAD_BLOCK_UPDATED,
-                new JSObject().put("download", new Gson().toJson(download)));
-    }
-
-    @Override
-    public void onError(@NonNull Download download, @NonNull Error error, @Nullable Throwable throwable) {
-        Log.i(TAG, DownloadEvent.ON_ERROR + " : " + download);
-        notifyListeners(DownloadEvent.ON_ERROR, new JSObject().put("download", new Gson().toJson(download)));
-    }
-
-    @Override
-    public void onPaused(@NonNull Download download) {
-        Log.i(TAG, DownloadEvent.ON_PAUSED + " : " + download);
-        notifyListeners(DownloadEvent.ON_PAUSED, new JSObject().put("download", new Gson().toJson(download)));
-    }
-
-    @Override
-    public void onProgress(@NonNull Download download, long l, long l1) {
-        Log.i(TAG, DownloadEvent.ON_PROGRESS + " : " + download);
-        notifyListeners(DownloadEvent.ON_PROGRESS, new JSObject().put("download", new Gson().toJson(download)));
-    }
-
-    @Override
-    public void onQueued(@NonNull Download download, boolean b) {
-        Log.i(TAG, DownloadEvent.ON_QUEUED + " : " + download);
-        notifyListeners(DownloadEvent.ON_QUEUED, new JSObject().put("download", new Gson().toJson(download)));
-    }
-
-    @Override
-    public void onRemoved(@NonNull Download download) {
-        Log.i(TAG, DownloadEvent.ON_REMOVED + " : " + download);
-        notifyListeners(DownloadEvent.ON_REMOVED, new JSObject().put("download", new Gson().toJson(download)));
-    }
-
-    @Override
-    public void onResumed(@NonNull Download download) {
-        Log.i(TAG, DownloadEvent.ON_RESUMED + " : " + download);
-        notifyListeners(DownloadEvent.ON_RESUMED, new JSObject().put("download", new Gson().toJson(download)));
-    }
-
-    @Override
-    public void onStarted(@NonNull Download download, @NonNull List<? extends DownloadBlock> list, int i) {
-        Log.i(TAG, DownloadEvent.ON_STARTED + " : " + download);
-        notifyListeners(DownloadEvent.ON_STARTED, new JSObject().put("download", new Gson().toJson(download)));
-    }
-
-    @Override
-    public void onWaitingNetwork(@NonNull Download download) {
-        Log.i(TAG, DownloadEvent.ON_WAITING_NETWORK + " : " + download);
-        notifyListeners(DownloadEvent.ON_WAITING_NETWORK, new JSObject().put("download", new Gson().toJson(download)));
-    }
 }
