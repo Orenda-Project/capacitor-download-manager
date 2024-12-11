@@ -184,6 +184,8 @@ public class DownloadManagerPlugin extends Plugin implements FetchListener {
 
     @Override
     public void onPaused(@NonNull Download download) {
+        Log.i(TAG, DownloadEvent.ON_PAUSED + download);
+        notifyListeners(DownloadEvent.ON_PAUSED, new JSObject().put("download", new Gson().toJson(download)));
     }
 
     @Override
