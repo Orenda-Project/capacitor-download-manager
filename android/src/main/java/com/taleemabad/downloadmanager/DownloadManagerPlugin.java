@@ -148,7 +148,6 @@ public class DownloadManagerPlugin extends Plugin implements FetchListener {
 
     @Override
     public void onCancelled(@NonNull Download download) {
-        Log.i(TAG, DownloadEvent.ON_CANCELLED + download);
     }
 
     @Override
@@ -165,7 +164,6 @@ public class DownloadManagerPlugin extends Plugin implements FetchListener {
 
     @Override
     public void onDownloadBlockUpdated(@NonNull Download download, @NonNull DownloadBlock downloadBlock, int i) {
-        Log.i(TAG, DownloadEvent.ON_DOWNLOAD_BLOCK_UPDATED + " : " + download);
     }
 
     @Override
@@ -176,7 +174,6 @@ public class DownloadManagerPlugin extends Plugin implements FetchListener {
 
     @Override
     public void onPaused(@NonNull Download download) {
-        Log.i(TAG, DownloadEvent.ON_PAUSED + " : " + download);
     }
 
     @Override
@@ -187,7 +184,6 @@ public class DownloadManagerPlugin extends Plugin implements FetchListener {
 
     @Override
     public void onQueued(@NonNull Download download, boolean b) {
-        Log.i(TAG, DownloadEvent.ON_QUEUED + " : " + download);
     }
 
     @Override
@@ -204,12 +200,10 @@ public class DownloadManagerPlugin extends Plugin implements FetchListener {
 
     @Override
     public void onStarted(@NonNull Download download, @NonNull List<? extends DownloadBlock> list, int i) {
-        Log.i(TAG, DownloadEvent.ON_STARTED + " : " + download);
     }
 
     @Override
     public void onWaitingNetwork(@NonNull Download download) {
-        Log.i(TAG, DownloadEvent.ON_WAITING_NETWORK + " : " + download);
     }
 
     /*/////////////////////// Scanner ////////////////////////////*/

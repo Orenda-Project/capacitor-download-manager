@@ -112,7 +112,6 @@ public class DownloadManager {
     }
 
     private List<Request> getFetchRequestsWithTag(List<JSONObject> urls) {
-        Log.i(TAG, "initFetch: " + urls.toString());
         ArrayList<Request> requests = new ArrayList<>();
         for (JSONObject url : urls) {
             try {
@@ -126,8 +125,7 @@ public class DownloadManager {
                 request.setNetworkType(NetworkType.ALL);
                 requests.add(request);
             } catch (JSONException e) {
-                e.printStackTrace();
-                Log.i(TAG, "getFetchRequestsWithTag: " + e.getMessage());
+                Log.e(TAG, "getFetchRequestsWithTag: " + e.getMessage());
             }
         }
         return requests;
@@ -173,9 +171,26 @@ public class DownloadManager {
                 ret.put("download", new Gson().toJson(downloadList));
                 call.resolve(ret);
             } catch (FetchException e) {
-                Log.i(TAG, "FetchException: " + e.getMessage());
+                Log.e(TAG, "FetchException: " + e.getMessage());
             }
         });
+    }
+
+    public void getDownloadById(PluginCall call) {
+        if (fetch == null) {
+            fetch = init();
+        }
+        try {
+            List<Integer> listOfIds = call.getArray("id").toList();
+            fetch.getDownloads(listOfIds, downloads -> {
+                List<Download> downloadList = new ArrayList<>(downloads);
+                JSObject ret = new JSObject();
+                ret.put("download", new Gson().toJson(downloadList));
+                call.resolve(ret);
+            });
+        } catch (Exception e) {
+            Log.e(TAG, "FetchException: " + e.getMessage());
+        }
     }
 
     public void resumeDownloads() {
@@ -186,7 +201,7 @@ public class DownloadManager {
             fetch.addListener(mFetchListener);
             fetch.resumeGroup(groupId);
         } catch (Exception e) {
-            Log.i(TAG, "resumeDownloads: " + e.getMessage());
+            Log.e(TAG, "resumeDownloads: " + e.getMessage());
         }
     }
 
@@ -197,7 +212,7 @@ public class DownloadManager {
             }
             fetch.delete(ids);
         } catch (Exception e) {
-            Log.i(TAG, "deleteDownloads: " + e.getMessage());
+            Log.e(TAG, "deleteDownloads: " + e.getMessage());
         }
     }
 
@@ -208,7 +223,7 @@ public class DownloadManager {
             }
             fetch.pause(ids);
         } catch (Exception e) {
-            Log.i(TAG, "pauseDownloads: " + e.getMessage());
+            Log.e(TAG, "pauseDownloads: " + e.getMessage());
         }
     }
 }
