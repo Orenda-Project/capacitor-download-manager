@@ -62,17 +62,25 @@ public class DownloadManagerPlugin extends Plugin implements FetchListener {
     @RequiresApi(api = Build.VERSION_CODES.R)
     @PluginMethod
     public void startDownload(PluginCall call) {
-        saveCall(call);
-        initDownloadManager();
-        downloadManager.initDownloading(call);
+        try {
+            saveCall(call);
+            initDownloadManager();
+            downloadManager.initDownloading(call);
+        } catch (Exception e) {
+            call.reject(e.getMessage());
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.R)
     @PluginMethod
     public void startDownloadWithTag(PluginCall call) {
-        saveCall(call);
-        initDownloadManager();
-        downloadManager.initDownloadingWithTag(call);
+        try {
+            saveCall(call);
+            initDownloadManager();
+            downloadManager.initDownloadingWithTag(call);
+        } catch (Exception e) {
+            call.reject(e.getMessage());
+        }
     }
 
     @PluginMethod
@@ -148,6 +156,8 @@ public class DownloadManagerPlugin extends Plugin implements FetchListener {
 
     @Override
     public void onCancelled(@NonNull Download download) {
+        Log.i(TAG, DownloadEvent.ON_CANCELLED + download);
+        notifyListeners(DownloadEvent.ON_CANCELLED, new JSObject().put("download", new Gson().toJson(download)));
     }
 
     @Override
