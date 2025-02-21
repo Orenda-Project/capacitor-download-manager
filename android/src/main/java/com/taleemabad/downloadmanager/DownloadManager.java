@@ -156,12 +156,12 @@ public class DownloadManager {
     }
 
     public void getDownloads(PluginCall call) {
-        if (fetch == null) {
-            fetch = init();
-        }
-        List<Download> downloadList = new ArrayList<>();
-        fetch.getFetchGroup(groupId, fetchGroup -> {
-            try {
+        try {
+            if (fetch == null) {
+                fetch = init();
+            }
+            List<Download> downloadList = new ArrayList<>();
+            fetch.getFetchGroup(groupId, fetchGroup -> {
                 List<Download> downloads = fetchGroup.getDownloads();
                 for (Download download : downloads) {
                     Log.i(TAG, "Download File:: " + download);
@@ -170,17 +170,17 @@ public class DownloadManager {
                 JSObject ret = new JSObject();
                 ret.put("download", new Gson().toJson(downloadList));
                 call.resolve(ret);
-            } catch (FetchException e) {
-                Log.e(TAG, "FetchException: " + e.getMessage());
-            }
-        });
+            });
+        } catch (FetchException e) {
+            Log.e(TAG, "FetchException: " + e.getMessage());
+        }
     }
 
     public void getDownloadById(PluginCall call) {
-        if (fetch == null) {
-            fetch = init();
-        }
         try {
+            if (fetch == null) {
+                fetch = init();
+            }
             List<Integer> listOfIds = call.getArray("id").toList();
             fetch.getDownloads(listOfIds, downloads -> {
                 List<Download> downloadList = new ArrayList<>(downloads);
@@ -224,6 +224,17 @@ public class DownloadManager {
             fetch.pause(ids);
         } catch (Exception e) {
             Log.e(TAG, "pauseDownloads: " + e.getMessage());
+        }
+    }
+
+    public void cancelDownloads(List<Integer> ids) {
+        try {
+            if (fetch == null) {
+                fetch = init();
+            }
+            fetch.cancel(ids);
+        } catch (Exception e) {
+            Log.e(TAG, "cancelDownloads: " + e.getMessage());
         }
     }
 }
