@@ -13,10 +13,16 @@ export class DownloadManagerWeb extends WebPlugin {
     getDownloadList() {
         return Promise.resolve({ value: '[]' });
     }
+    getDownloadListById() {
+        return Promise.resolve({ value: '[]' });
+    }
     removeDownloads(options) {
         return Promise.resolve({ value: options.value });
     }
     pauseDownloads(options) {
+        return Promise.resolve({ value: options.value });
+    }
+    cancelDownloads(options) {
         return Promise.resolve({ value: options.value });
     }
     resumeDownloads() {

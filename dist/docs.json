@@ -92,6 +92,22 @@
         "slug": "pausedownloads"
       },
       {
+        "name": "cancelDownloads",
+        "signature": "(options: { value: string[]; }) => Promise<{ value: string[]; }>",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "",
+            "type": "{ value: string[]; }"
+          }
+        ],
+        "returns": "Promise<{ value: string[]; }>",
+        "tags": [],
+        "docs": "",
+        "complexTypes": [],
+        "slug": "canceldownloads"
+      },
+      {
         "name": "resumeDownloads",
         "signature": "() => Promise<{ value: string; }>",
         "parameters": [],
@@ -110,6 +126,16 @@
         "docs": "",
         "complexTypes": [],
         "slug": "getdownloadlist"
+      },
+      {
+        "name": "getDownloadListById",
+        "signature": "() => Promise<{ value: string; }>",
+        "parameters": [],
+        "returns": "Promise<{ value: string; }>",
+        "tags": [],
+        "docs": "",
+        "complexTypes": [],
+        "slug": "getdownloadlistbyid"
       },
       {
         "name": "addListener",
@@ -188,7 +214,7 @@
       "docs": "",
       "types": [
         {
-          "text": "{\n    images?: string[];\n    pdf?: string | null;\n}",
+          "text": "{\n  images?: string[];\n  pdf?: string | null;\n}",
           "complexTypes": []
         }
       ]

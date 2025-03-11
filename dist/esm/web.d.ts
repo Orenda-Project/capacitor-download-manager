@@ -24,12 +24,20 @@ export declare class DownloadManagerWeb extends WebPlugin implements DownloadMan
     getDownloadList(): Promise<{
         value: string;
     }>;
+    getDownloadListById(): Promise<{
+        value: string;
+    }>;
     removeDownloads(options: {
         value: string[];
     }): Promise<{
         value: string[];
     }>;
     pauseDownloads(options: {
+        value: string[];
+    }): Promise<{
+        value: string[];
+    }>;
+    cancelDownloads(options: {
         value: string[];
     }): Promise<{
         value: string[];

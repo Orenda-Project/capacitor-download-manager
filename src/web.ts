@@ -21,10 +21,16 @@ export class DownloadManagerWeb
   getDownloadList(): Promise<{ value: string }> {
     return Promise.resolve({ value: '[]' });
   }
+  getDownloadListById(): Promise<{ value: string }> {
+    return Promise.resolve({ value: '[]' });
+  }
   removeDownloads(options: { value: string[] }): Promise<{ value: string[] }> {
     return Promise.resolve({ value: options.value });
   }
   pauseDownloads(options: { value: string[] }): Promise<{ value: string[] }> {
+    return Promise.resolve({ value: options.value });
+  }
+  cancelDownloads(options: { value: string[] }): Promise<{ value: string[] }> {
     return Promise.resolve({ value: options.value });
   }
   resumeDownloads(): Promise<{ value: string }> {
