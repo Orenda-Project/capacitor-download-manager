@@ -34,7 +34,6 @@ public class DownloadManager {
     private static Context mContext;
     private static Fetch fetch;
     private static DownloadManager instance;
-    private static FetchListener mFetchListener;
 
     public static DownloadManager getInstance(@NonNull Context context, FetchListener fetchListener) {
         // If the instance is null, create a new instance
@@ -42,7 +41,7 @@ public class DownloadManager {
             instance = new DownloadManager(context);
             mContext = context;
             fetch = instance.init();
-            mFetchListener = fetchListener;
+            fetch.addListener(fetchListener);
         }
         // Return the single instance
         return instance;
@@ -84,14 +83,12 @@ public class DownloadManager {
     }
 
     private void startDownloading(List<String> urls) {
-        fetch.addListener(mFetchListener);
         fetch.enqueue(getFetchRequests(urls), updatedRequests -> {
             Log.i(TAG, "enqueue: " + updatedRequests);
         });
     }
 
     private void startDownloadingWithTag(List<JSONObject> urls) {
-        fetch.addListener(mFetchListener);
         List<Request> requests = getFetchRequestsWithTag(urls);
         fetch.enqueue(requests, updatedRequests -> {
             Log.i(TAG, "enqueue: " + updatedRequests);
@@ -198,7 +195,6 @@ public class DownloadManager {
             if (fetch == null) {
                 fetch = init();
             }
-            fetch.addListener(mFetchListener);
             fetch.resumeGroup(groupId);
         } catch (Exception e) {
             Log.e(TAG, "resumeDownloads: " + e.getMessage());

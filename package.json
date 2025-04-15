@@ -1,6 +1,6 @@
 {
   "name": "capacitor-download-manager",
-  "version": "1.1.7",
+  "version": "1.1.8",
   "description": "Capacitor plugin for downloading files to native device",
   "main": "dist/plugin.cjs.js",
   "module": "dist/esm/index.js",
@@ -47,7 +47,7 @@
     "@capacitor/android": "^5.0.0",
     "@capacitor/core": "^5.7.4",
     "@capacitor/docgen": "^0.0.18",
-    "@capacitor/ios": "^5.0.0",
+    "@capacitor/ios": "^5.7.8",
     "@ionic/eslint-config": "^0.3.0",
     "@ionic/prettier-config": "^1.0.1",
     "@ionic/swiftlint-config": "^1.1.2",
